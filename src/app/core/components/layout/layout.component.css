@@ -1,0 +1,44 @@
+/* Altura completa para el contenedor */
+.sidenav-container {
+  height: 100vh;
+}
+
+/* Estilos del Sidenav */
+.app-sidenav {
+  width: 250px;
+  /* Estilo visual del sidenav */
+  background-color: #f8f8f8;
+}
+
+.logo-area {
+  padding: 16px;
+  text-align: center;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  /* (Asumiendo que tienes un logo en assets) */
+}
+
+.app-name {
+  margin: 8px 0 0 0;
+  font-size: 1.2em;
+}
+
+/* Estilo para el enlace activo */
+.active-link {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #3f51b5; /* Color primario de Material */
+  font-weight: 500;
+}
+
+/* Estilos del Toolbar */
+.toolbar-spacer {
+  flex: 1 1 auto; /* Esto empuja el siguiente elemento a la derecha */
+}
+
+/* Área donde se carga el router-outlet */
+.content-area {
+  padding: 20px;
+}

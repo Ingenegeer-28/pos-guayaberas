@@ -1,0 +1,72 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Gestión de Usuarios</mat-card-title>
+        <span class="spacer"></span>
+        <button mat-raised-button color="primary" (click)="openUserForm()" [class.disable]="(authService.userRole$ | async) === 'admin'">
+            <mat-icon>person_add</mat-icon> Nuevo Usuario
+        </button>
+    </mat-card-header>
+
+    <mat-card-content>
+        <mat-form-field appearance="outline" class="full-width-input">
+            <mat-label>Buscar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por nombre o username" #input>
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.nombre }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="username">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Username </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.username }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rol">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Rol </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.rol | uppercase }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estatus </th>
+                    <td mat-cell *matCellDef="let user">
+                        <mat-icon [color]="user.estatus === 1 ? 'accent' : 'warn'">
+                            {{ user.estatus === 1 ? 'check_circle' : 'cancel' }}
+                        </mat-icon>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fecha_creacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Creación </th>
+                    <td mat-cell *matCellDef="let user"> {{ user.fecha_creacion | date: 'shortDate' }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                    <td mat-cell *matCellDef="let user">
+                        <button mat-icon-button color="accent" matTooltip="Editar" (click)="openUserForm(user)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="deleteUser(user)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="6">No se encontraron usuarios para el filtro "{{ input.value }}"</td>
+                </tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

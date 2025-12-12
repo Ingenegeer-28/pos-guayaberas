@@ -1,0 +1,56 @@
+<div class="models-header">
+    <h2>Gestión de Modelos de Guayaberas</h2>
+    <button mat-raised-button color="primary" (click)="navigateNewModel()">
+        <mat-icon>add_box</mat-icon>
+        <span>Crear Nuevo Modelo</span>
+    </button>
+</div>
+
+<mat-card class="models-card">
+
+    <mat-form-field appearance="outline" class="full-width-input">
+        <mat-label>Buscar por ID o Descripción del Modelo</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Presidencial" #input>
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="mat-elevation-z2 table-container">
+        <mat-table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="id_modelo">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+                <mat-cell *matCellDef="let model"> {{ model.id }} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="descripcion">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Descripción del Modelo </mat-header-cell>
+                <mat-cell *matCellDef="let model"> **{{ model.descripcion }}** </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+                <mat-cell *matCellDef="let model">
+                    <button mat-icon-button color="primary" (click)="editModel(model.id)"
+                        matTooltip="Configurar / Editar">
+                        <mat-icon>settings</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" matTooltip="Eliminar modelo (Requiere confirmación)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+            <mat-row *matNoDataRow>
+                <td [attr.colspan]="displayedColumns.length" class="no-data-row">
+                    No se encontraron modelos que coincidan con "{{ input.value }}"
+                </td>
+            </mat-row>
+        </mat-table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Seleccionar página de modelos"></mat-paginator>
+
+    </div>
+</mat-card>

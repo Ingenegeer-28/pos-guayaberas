@@ -1,0 +1,60 @@
+.product-form-container {
+  padding: 16px;
+}
+
+.product-card {
+  margin-top: 20px;
+  padding: 24px;
+}
+
+/* Flexbox para responsividad de la Fila */
+.row {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea en móvil */
+  margin: 0 -8px; /* Contrarresta el padding de las columnas */
+}
+
+/* Estilos de Columna (para simular el Grid) */
+.col-4,
+.col-6,
+.col-8 {
+  padding: 0 8px; /* Espacio entre los campos de la misma fila */
+  margin-bottom: 20px;
+}
+
+.col-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+.col-4 {
+  flex: 0 0 33.33%;
+  max-width: 33.33%;
+}
+.col-8 {
+  flex: 0 0 66.66%;
+  max-width: 66.66%;
+}
+
+/* Campo de ancho completo */
+.full-width-field {
+  width: 100%;
+}
+
+/* Alineación para la fila de stock y toggle */
+.align-center {
+  align-items: center;
+}
+
+.toggle-label {
+  margin-left: 10px;
+}
+
+/* Responsividad para móviles (menos de 600px) */
+@media (max-width: 600px) {
+  .col-4,
+  .col-6,
+  .col-8 {
+    flex: 0 0 100%; /* Todos los campos ocupan el ancho completo */
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,23 @@
+<mat-card class="reports-container">
+    <mat-card-title>Dashboard de Reportes</mat-card-title>
+
+    <mat-card-content class="reports-content">
+        <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+            <a mat-tab-link routerLink="sales" routerLinkActive #rlaSales="routerLinkActive"
+                [active]="rlaSales.isActive">
+                <mat-icon>trending_up</mat-icon> Reporte de Ventas
+            </a>
+            <a mat-tab-link routerLink="inventory" routerLinkActive #rlaInventory="routerLinkActive"
+                [active]="rlaInventory.isActive">
+                <mat-icon>analytics</mat-icon> Reporte de Inventario
+            </a>
+        </nav>
+
+        <mat-tab-nav-panel #tabPanel>
+            <div class="report-view">
+                <router-outlet></router-outlet>
+            </div>
+        </mat-tab-nav-panel>
+
+    </mat-card-content>
+</mat-card>

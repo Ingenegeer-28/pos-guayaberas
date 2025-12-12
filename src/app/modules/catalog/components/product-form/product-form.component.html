@@ -1,0 +1,93 @@
+<div class="product-form-container">
+    <h2>{{ pageTitle }}</h2>
+
+    <mat-card class="product-card">
+        <mat-card-content>
+            <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+
+                <div class="row">
+                    <mat-form-field appearance="outline" class="col-6">
+                        <mat-label>Nombre de la Guayabera</mat-label>
+                        <input matInput formControlName="nombre" required>
+                        <mat-error *ngIf="f['nombre'].errors?.['required']">El nombre es obligatorio.</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-6">
+                        <mat-label>SKU (Código del Producto)</mat-label>
+                        <input matInput formControlName="sku" required>
+                        <mat-error *ngIf="f['sku'].errors?.['required']">El SKU es obligatorio.</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <mat-form-field appearance="outline" class="col-4">
+                        <mat-label>Precio ($)</mat-label>
+                        <input matInput type="number" formControlName="price" required min="0.01">
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <mat-error *ngIf="f['price'].errors?.['min']">Debe ser mayor a $0.00.</mat-error>
+                        <mat-error *ngIf="f['price'].errors?.['required']">El precio es obligatorio.</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-4">
+                        <mat-label>Talla</mat-label>
+                        <mat-select formControlName="size" required>
+                            <mat-option *ngFor="let t of tallas" [value]="t.id">{{t.descripcion}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="f['size'].errors?.['required']">La talla es obligatoria.</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-4">
+                        <mat-label>Color</mat-label>
+                        <mat-select formControlName="color" required>
+                            <mat-option *ngFor="let c of colores" [value]="c.id">{{ c.descripcion }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="f['color'].errors?.['required']">El color es obligatorio.</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-4">
+                        <mat-label>Manga</mat-label>
+                        <mat-select formControlName="manga" required>
+                            <mat-option *ngFor="let m of mangas" [value]="m.id">{{ m.descripcion }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="f['manga'].errors?.['required']">El color es obligatorio.</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-4">
+                        <mat-label>Departamento</mat-label>
+                        <mat-select formControlName="departamento" required>
+                            <mat-option *ngFor="let d of departamentos" [value]="d.id">{{ d.descripcion }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="f['departamento'].errors?.['required']">El color es obligatorio.</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="row align-center">
+                    <mat-form-field appearance="outline" class="col-4">
+                        <mat-label>Inventario (Stock)</mat-label>
+                        <input matInput type="number" formControlName="stock" required min="0">
+                        <mat-icon matSuffix>warehouse</mat-icon>
+                        <mat-error *ngIf="f['stock'].errors?.['required']">El stock es obligatorio.</mat-error>
+                        <mat-error *ngIf="f['stock'].errors?.['min']">El stock no puede ser negativo.</mat-error>
+                    </mat-form-field>
+
+                    <mat-slide-toggle formControlName="isActive" color="primary" class="col-8">
+                        <span class="toggle-label">Producto Activo (Visible en POS)</span>
+                    </mat-slide-toggle>
+                </div>
+
+                <mat-form-field appearance="outline" class="full-width-field">
+                    <mat-label>Descripción del Producto</mat-label>
+                    <textarea matInput formControlName="description" rows="3"></textarea>
+                </mat-form-field>
+
+                <mat-card-actions align="end" class="form-actions">
+                    <button mat-button routerLink="/catalog">CANCELAR</button>
+                    <button mat-raised-button color="primary" type="submit" [disabled]="productForm.invalid">
+                        <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+                        {{ isEditMode ? 'GUARDAR CAMBIOS' : 'CREAR PRODUCTO' }}
+                    </button>
+                </mat-card-actions>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

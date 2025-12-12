@@ -1,0 +1,104 @@
+/* Estilos del contenedor principal */
+.product-selector-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-wrapper {
+  flex-grow: 1;
+  overflow-y: auto; /* Permite scroll solo en el contenido */
+  padding: 16px;
+}
+
+/* --- VISTA 1: MODELOS --- */
+
+.model-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.model-box {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.2s;
+  background-color: #fff;
+}
+
+.model-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.model-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.model-caption {
+  padding: 10px 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+/* --- VISTA 2: PRODUCTOS Y FILTROS --- */
+
+.product-list-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.product-filters {
+  display: flex;
+  gap: 16px;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.product-filters mat-form-field {
+  flex-grow: 1;
+  min-width: 120px;
+}
+
+.product-variants-grid {
+  flex-grow: 1;
+  overflow-y: auto; /* Scroll para la lista de productos */
+}
+
+/* Estilos de la tarjeta de producto individual */
+.product-variant-card {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.variant-photo {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+.variant-price-stock {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px 8px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.stock.low {
+  color: #ff9800; /* Naranja de advertencia */
+}
+
+.out-of-stock {
+  opacity: 0.5;
+  pointer-events: none;
+}

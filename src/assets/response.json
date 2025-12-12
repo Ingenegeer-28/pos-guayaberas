@@ -1,0 +1,202 @@
+{
+    "statuscode": 200,
+    "existeError": false,
+    "departamentos": [
+        {
+            "id_departamento": "CAB01",
+            "descripcion": "CABALLEROS"
+        },
+        {
+            "id_departamento": "DAM01",
+            "descripcion": "DAMAS"
+        },
+        {
+            "id_departamento": "NIÑ01",
+            "descripcion": "NIÑOS"
+        }
+    ],
+    "mangas": [
+        {
+            "id_manga": "MC-001",
+            "descripcion": "Manga Corta"
+        },
+        {
+            "id_manga": "ML-001",
+            "descripcion": "Manga Larga"
+        }
+    ],
+    "colores": [
+        {
+            "id_color": 5,
+            "descripcion": "rojo"
+        },
+        {
+            "id_color": 6,
+            "descripcion": "rojo"
+        },
+        {
+            "id_color": 7,
+            "descripcion": "verde"
+        },
+        {
+            "id_color": 8,
+            "descripcion": "Blanco"
+        },
+        {
+            "id_color": 9,
+            "descripcion": "Blanco"
+        },
+        {
+            "id_color": 10,
+            "descripcion": "Azul marino"
+        },
+        {
+            "id_color": 11,
+            "descripcion": "Gris"
+        }
+    ],
+    "tallas": [
+        {
+            "id_talla": 1,
+            "descripcion": "28"
+        },
+        {
+            "id_talla": 2,
+            "descripcion": "30"
+        },
+        {
+            "id_talla": 4,
+            "descripcion": "32"
+        },
+        {
+            "id_talla": 5,
+            "descripcion": "38"
+        },
+        {
+            "id_talla": 8,
+            "descripcion": "40"
+        },
+        {
+            "id_talla": 9,
+            "descripcion": "42"
+        },
+        {
+            "id_talla": 21,
+            "descripcion": "44"
+        },
+        {
+            "id_talla": 22,
+            "descripcion": "36"
+        }
+    ],
+    "modelos": [
+        {
+            "id_modelo": 1,
+            "descripcion": "Alfredo Gris"
+        },
+        {
+            "id_modelo": 2,
+            "descripcion": "Martin rojo"
+        },
+        {
+            "id_modelo": 4,
+            "descripcion": "Modelo Presidencial"
+        },
+        {
+            "id_modelo": 5,
+            "descripcion": "Modelo Presidencial"
+        },
+        {
+            "id_modelo": 6,
+            "descripcion": "Modelo Presidencial Dama"
+        },
+        {
+            "id_modelo": 7,
+            "descripcion": "Modelo Presidencial Dama"
+        },
+        {
+            "id_modelo": 8,
+            "descripcion": "Modelo Panal Blanco"
+        },
+        {
+            "id_modelo": 9,
+            "descripcion": "Modelo Panal Azul Marino"
+        },
+        {
+            "id_modelo": 12,
+            "descripcion": "Modelo Panal verde"
+        },
+        {
+            "id_modelo": 13,
+            "descripcion": "Modelo Panal Gris"
+        }
+    ],
+    "productos": [
+        {
+            "id_producto": "1",
+            "nombre": "Modelo Panal Gris",
+			"id_modelo": "13",
+            "modelo_descripcion": "Modelo Panal Gris",
+            "descripcion": "Descripción del nuevo producto",
+            "id_departamento": "CAB01",
+            "departamento_descripcion": "CABALLEROS",
+            "foto": "modelo-panal-blanca.webp",
+            "cantidad": 15,
+            "precio": "500.00",
+            "id_talla": "4",
+            "talla_descripcion": "32",
+            "id_manga": "MC-001",
+            "manga_descripcion": "Manga Corta",
+            "id_color": "11",
+            "color_descripcion": "Gris",
+            "estatus_producto": "1",
+            "tipo_producto": "prenda",
+            "fecha_creacion": "0000-00-00",
+            "fecha_actualizacion": "2025-09-24"
+        },
+        {
+            "id_producto": "2",
+            "nombre": "Modelo Panal Gris",
+			"id_modelo": "13",
+            "modelo_descripcion": "Modelo Panal Gris",
+            "descripcion": "Descripción del nuevo producto",
+            "id_departamento": "CAB01",
+            "departamento_descripcion": "CABALLEROS",
+            "foto": "modelo-panal-blanca.webp",
+            "cantidad": 15,
+            "precio": "500.00",
+            "id_talla": "21",
+            "talla_descripcion": "44",
+            "id_manga": "MC-001",
+            "manga_descripcion": "Manga Corta",
+            "id_color": "11",
+            "color_descripcion": "Gris",
+            "estatus_producto": "1",
+            "tipo_producto": "prenda",
+            "fecha_creacion": "0000-00-00",
+            "fecha_actualizacion": "2025-09-24"
+        },
+        {
+            "id_producto": "3",
+            "nombre": "Alfredo Gris",
+			"id_modelo": "1",
+            "modelo_descripcion": "Alfredo Gris",
+            "descripcion": "Descripción del nuevo producto",
+            "id_departamento": "CAB01",
+            "departamento_descripcion": "CABALLEROS",
+            "foto": "modelo-alfredo-gris.webp",
+            "cantidad": 19,
+            "precio": "900.00",
+            "id_talla": "21",
+            "talla_descripcion": "44",
+            "id_manga": "MC-001",
+            "manga_descripcion": "Manga Corta",
+            "id_color": "8",
+            "color_descripcion": "Blanco",
+            "estatus_producto": "1",
+            "tipo_producto": "prenda",
+            "fecha_creacion": "0000-00-00",
+            "fecha_actualizacion": "2025-09-24"
+        }
+    ]
+}

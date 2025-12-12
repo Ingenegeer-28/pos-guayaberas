@@ -1,0 +1,38 @@
+.pos-layout {
+  display: flex;
+  height: calc(100vh - 84px); /* Altura total menos el toolbar superior */
+  overflow: hidden;
+  gap: 16px; /* Espacio entre las columnas */
+  padding: 16px;
+}
+
+.pos-selector-column {
+  flex: 3; /* Ocupa 3 partes del espacio (ej. 75%) */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Permite scroll vertical en el selector si hay muchos productos */
+}
+
+.pos-cart-column {
+  flex: 1; /* Ocupa 1 parte del espacio (ej. 25%) */
+  min-width: 380px; /* Asegura un ancho mínimo para la columna del carrito */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsividad para Móviles o Tabletas pequeñas */
+@media (max-width: 992px) {
+  .pos-layout {
+    flex-direction: column; /* Apila las columnas */
+    height: auto;
+    overflow-y: auto;
+  }
+
+  /* Ambas columnas ocupan el 100% del ancho en móvil */
+  .pos-selector-column,
+  .pos-cart-column {
+    flex: none;
+    width: 100%;
+    min-height: 50vh; /* Altura mínima para que el carrito sea visible */
+  }
+}

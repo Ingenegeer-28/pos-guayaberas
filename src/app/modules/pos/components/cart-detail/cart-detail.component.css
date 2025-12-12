@@ -1,0 +1,155 @@
+.cart-detail-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-content-table {
+  flex-grow: 0.1;
+  overflow-y: auto; /* Permite scroll para la lista de ítems */
+}
+
+.full-width-table {
+  width: 350px;
+}
+
+.product-name {
+  display: block;
+  font-weight: 500;
+}
+
+.product-sku {
+  font-size: 0.75em;
+  color: #757575;
+}
+
+/* Control de Cantidad */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 10px;
+}
+
+.current-quantity {
+    padding: 0px;
+    font-weight: 500;
+}
+
+/* Sección de Totales */
+.cart-footer-summary {
+  padding: 16px;
+  background-color: #f7f7f7;
+}
+
+.totals-section {
+    padding: 10px 0;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.total-input-row {
+    height: 60px; /* Espacio para el input de Material */
+}
+
+.total-input-field {
+    width: 120px;
+    margin-right: 10px;
+}
+
+.final-total {
+    margin-top: 10px;
+    padding: 8px 0;
+    border-top: 2px solid #ccc;
+}
+
+.final-total h3 {
+    margin: 0;
+    font-size: 1.5em;
+    color: var(--mat-primary-color, #3f51b5); 
+}
+
+.checkout-button {
+    width: 100%;
+    margin-top: 15px;
+    height: 50px;
+    font-size: 1.1em;
+}
+
+table {
+  width: 100%;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row {
+  cursor: pointer;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail-wrapper {
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 0fr;
+  grid-template-columns: 100%;
+  transition: grid-template-rows 225ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.example-element-detail-wrapper-expanded {
+  grid-template-rows: 1fr;
+}
+
+.example-element-detail {
+  display: flex;
+  min-height: 0;
+}
+
+.example-element-diagram {
+  min-width: 80px;
+  border: 2px solid black;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 104px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+}
+
+.example-toggle-button {
+  transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.example-toggle-button-expanded {
+  transform: rotate(180deg);
+}

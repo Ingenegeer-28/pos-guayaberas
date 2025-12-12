@@ -1,0 +1,23 @@
+.reports-container {
+  padding: 24px;
+  min-height: 80vh;
+}
+
+.reports-content {
+  padding: 16px 0 0 0;
+}
+
+/* Estilo para los iconos en la navegación de pestañas */
+mat-icon {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.report-view {
+  padding: 20px 0; /* Espacio entre las pestañas y el contenido del reporte */
+}
+
+/* Forzar que el mat-tab-nav-bar ocupe todo el ancho */
+.mat-tab-nav-bar {
+  border-bottom: 1px solid #ddd;
+}

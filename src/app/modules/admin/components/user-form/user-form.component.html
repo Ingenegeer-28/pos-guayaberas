@@ -1,0 +1,47 @@
+<h1 mat-dialog-title>{{ isEditMode ? 'Editar Usuario' : 'Crear Nuevo Usuario' }}</h1>
+
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+    <mat-dialog-content class="mat-typography">
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre Completo</mat-label>
+            <input matInput formControlName="nombre">
+            <mat-error *ngIf="userForm.get('nombre')?.hasError('required')">El nombre es requerido.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username / Correo</mat-label>
+            <input matInput formControlName="username">
+            <mat-error *ngIf="userForm.get('username')?.hasError('required')">El username es requerido.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Contraseña</mat-label>
+            <input matInput type="password" formControlName="password"
+                placeholder="{{ isEditMode ? 'Dejar vacío para no cambiar' : '' }}">
+            <mat-error *ngIf="userForm.get('password')?.hasError('required')">La contraseña es requerida.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="rol">
+                <mat-option value="admin">Administrador</mat-option>
+                <mat-option value="empleado">Empleado</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-slide-toggle formControlName="estatus">
+            Estatus: **{{ userForm.get('estatus')?.value === 1 ? 'Activo' : 'Inactivo' }}**
+        </mat-slide-toggle>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button type="button" [mat-dialog-close]="false">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+            {{ isEditMode ? 'Guardar Cambios' : 'Crear Usuario' }}
+        </button>
+    </mat-dialog-actions>
+
+</form>

@@ -1,0 +1,89 @@
+<h2 mat-dialog-title>{{ modalTitle }}</h2>
+
+<mat-dialog-content>
+    <mat-tab-group (selectedTabChange)="loadReferences($event.tab.textLabel.toLowerCase().replace(' ', ''))">
+
+        <mat-tab label="Tallas">
+            <div class="reference-content">
+                <h3>Listado de Tallas Actuales</h3>
+                <mat-list>
+                    <mat-list-item *ngFor="let ref of tallas">{{ ref.descripcion }}</mat-list-item>
+                </mat-list>
+                <mat-divider></mat-divider>
+                <form [formGroup]="newReferenceForm" (ngSubmit)="createReference()" class="mt-3">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nueva Talla (Ej: 36)</mat-label>
+                        <input matInput formControlName="description">
+                        <mat-error
+                            *ngIf="newReferenceForm.get('description')?.hasError('required')">Requerido</mat-error>
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" [disabled]="newReferenceForm.invalid" type="submit">
+                        <mat-icon>add</mat-icon> Agregar Talla
+                    </button>
+                </form>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Departamentos">
+            <div class="reference-content">
+                <h3>Listado de Departamentos Actuales</h3>
+                <mat-list>
+                    <mat-list-item *ngFor="let ref of departamentos">{{ ref.descripcion }}</mat-list-item>
+                </mat-list>
+                <mat-divider></mat-divider>
+                <form [formGroup]="newReferenceForm" (ngSubmit)="createReference()" class="mt-3">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nuevo Departamento (Ej: Accesorios)</mat-label>
+                        <input matInput formControlName="description">
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" [disabled]="newReferenceForm.invalid" type="submit">
+                        <mat-icon>add</mat-icon> Agregar Departamento
+                    </button>
+                </form>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Colores">
+            <div class="reference-content">
+                <h3>Listado de Colores Actuales</h3>
+                <mat-list>
+                    <mat-list-item *ngFor="let ref of colores">{{ ref.descripcion }}</mat-list-item>
+                </mat-list>
+                <mat-divider></mat-divider>
+                <form [formGroup]="newReferenceForm" (ngSubmit)="createReference()" class="mt-3">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nuevo Color (Ej: Amarillo)</mat-label>
+                        <input matInput formControlName="description">
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" [disabled]="newReferenceForm.invalid" type="submit">
+                        <mat-icon>add</mat-icon> Agregar Color
+                    </button>
+                </form>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Tipos_Manga">
+            <div class="reference-content">
+                <h3>Listado de Mangas Actuales</h3>
+                <mat-list>
+                    <mat-list-item *ngFor="let ref of mangas">{{ ref.descripcion }}</mat-list-item>
+                </mat-list>
+                <mat-divider></mat-divider>
+                <form [formGroup]="newReferenceForm" (ngSubmit)="createReference()" class="mt-3">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nuevo Tipo de Manga (Ej: 3/4)</mat-label>
+                        <input matInput formControlName="description">
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" [disabled]="newReferenceForm.invalid" type="submit">
+                        <mat-icon>add</mat-icon> Agregar Manga
+                    </button>
+                </form>
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Cerrar</button>
+</mat-dialog-actions>

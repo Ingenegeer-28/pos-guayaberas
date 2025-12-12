@@ -1,0 +1,82 @@
+.model-form-container {
+  padding: 16px;
+}
+
+.model-config-card {
+  margin-top: 20px;
+  padding: 16px;
+}
+
+.config-form {
+  padding: 10px;
+}
+
+.full-width-field {
+  width: 100%;
+}
+
+.hint-text {
+  font-style: italic;
+  color: #757575;
+  margin-bottom: 20px;
+}
+
+/* Flexbox para alinear los selectores en filas */
+.variants-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.variant-field {
+  flex: 1 1 45%; /* Cada campo ocupa casi la mitad del espacio */
+  min-width: 250px; /* Ancho mínimo para evitar que se aplasten */
+}
+.add-variant-btn {
+  margin-bottom: 20px;
+}
+
+.variants-array-container {
+  padding: 10px;
+}
+
+.variant-group-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  background-color: #f7f7f7;
+}
+
+.variant-field {
+  flex-grow: 1; /* Permite que los campos crezcan equitativamente */
+  min-width: 150px;
+}
+
+/* Responsividad para móviles: apilar las variantes */
+@media (max-width: 768px) {
+  .variant-group-row {
+    flex-wrap: wrap;
+  }
+  .variant-field {
+    flex: 1 1 100%; /* Ocupa el ancho completo */
+  }
+  /* Mover el botón de eliminar a la derecha del todo */
+  .variant-group-row button {
+    order: 4; 
+    margin-left: auto;
+  }
+}
+/* Media query para móviles: forzar ancho completo */
+@media (max-width: 600px) {
+  .variant-field {
+    flex: 1 1 100%;
+  }
+}
+
+.form-actions {
+  padding-top: 20px;
+}

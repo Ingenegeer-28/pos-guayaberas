@@ -1,0 +1,84 @@
+<mat-card class="catalog-page-card">
+    <mat-card-header>
+
+        <button mat-icon-button (click)="goBackToModels()" *ngIf="viewState === 'variants'"
+            matTooltip="Volver a Modelos">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        <mat-card-title>
+            Catálogo de Guayaberas
+            <span *ngIf="selectedModel" class="current-view-title"> / {{ selectedModel.descripcion }}</span>
+        </mat-card-title>
+
+        <span class="spacer"></span>
+
+        <button mat-raised-button color="primary" [routerLink]="['/catalog/new']" *ngIf="viewState === 'models'">
+            <mat-icon>add</mat-icon> Nuevo Producto/Modelo
+        </button>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content>
+
+        <div *ngIf="viewState === 'models'" class="filter-container">
+            <mat-form-field appearance="outline" class="full-width-input">
+                <mat-label>Buscar Modelo, SKU o Color</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Escribe para buscar...">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="viewState === 'models'" class="model-grid-container">
+
+            <h3 *ngIf="modelsToDisplay.length === 0 && allModels.length === 0">Cargando Modelos...</h3>
+
+            <div *ngFor="let model of modelsToDisplay" class="model-box mat-elevation-z2" (click)="selectModel(model)">
+
+                <img [src]="'assets/images/' + model.products[0].foto" alt="{{ model.descripcion }}"
+                    class="model-image">
+                <div class="model-caption">
+                    <h4>{{ model.descripcion }}</h4>
+                    <small>{{ model.products.length }} variantes</small>
+                </div>
+            </div>
+
+            <p *ngIf="modelsToDisplay.length === 0 && allModels.length > 0" class="no-variants">
+                No se encontraron modelos que coincidan con el filtro: "**{{ currentFilterValue }}**"
+            </p>
+        </div>
+
+        <div *ngIf="viewState === 'variants'" class="variant-list-container">
+
+            <mat-list>
+                <h3 mat-subheader>Variantes (Talla/Color/Manga)</h3>
+                <mat-divider></mat-divider>
+
+                <mat-list-item *ngFor="let variant of variantsToDisplay" class="variant-item">
+                    <img matListItemAvatar [src]="'assets/images/' + variant.foto" alt="{{ variant.nombre }}">
+
+                    <h4 matListItemTitle>
+                        {{ variant.talla_descripcion }} | {{ variant.color_descripcion }} ({{ variant.manga_descripcion
+                        }})
+                    </h4>
+
+                    <p matListItemLine>
+                        SKU: **{{ variant.sku }}** | Precio: **{{ variant.precio | currency }}**
+                    </p>
+
+                    <p matListItemLine class="stock-info" [class.low-stock]="variant.cantidad < 5">
+                        Stock: **{{ variant.cantidad }}** unidades
+                    </p>
+
+                    <button mat-icon-button matListItemMeta (click)="editProduct(variant)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </mat-list-item>
+
+                <p *ngIf="variantsToDisplay.length === 0" class="no-variants">Este modelo no tiene variantes
+                    registradas.</p>
+            </mat-list>
+        </div>
+
+    </mat-card-content>
+</mat-card>

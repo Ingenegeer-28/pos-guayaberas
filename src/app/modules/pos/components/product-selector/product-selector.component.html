@@ -1,0 +1,99 @@
+<mat-card class="product-selector-card">
+
+    <mat-card-header class="header-nav">
+        <button mat-icon-button (click)="goBackToModels()" *ngIf="viewState === 'products'"
+            matTooltip="Volver a Modelos">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <mat-card-title>
+            {{ viewState === 'models' ? 'Seleccione el Modelo Base' : selectedModel!.descripcion }}
+        </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+
+    <mat-card-content class="content-wrapper">
+
+        <div *ngIf="viewState === 'models'" class="model-grid-container">
+            <div *ngFor="let model of (models$ | async)" class="model-box mat-elevation-z1"
+                (click)="selectModel(model)">
+                <img [src]="'assets/images/' + model.products[0].foto" alt="{{ model.descripcion }}"
+                    class="model-image">
+                <div class="model-caption">
+                    **{{ model.descripcion }}**
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="viewState === 'products' && (references$ | async) as refs" class="product-list-view">
+
+            <div class="product-filters">
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Talla</mat-label>
+                    <mat-select [(ngModel)]="filterTalla" (ngModelChange)="applyFilters()">
+                        <mat-option value="">Tallas (Todas)</mat-option>
+                        <mat-option *ngFor="let t of refs.tallas" [value]="t.descripcion">{{ t.descripcion
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Color</mat-label>
+                    <mat-select [(ngModel)]="filterColor" (ngModelChange)="applyFilters()">
+                        <mat-option value="">Colores (Todos)</mat-option>
+                        <mat-option *ngFor="let c of refs.colores" [value]="c.descripcion">{{ c.descripcion
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Manga</mat-label>
+                    <mat-select [(ngModel)]="filterManga" (ngModelChange)="applyFilters()">
+                        <mat-option value="">Mangas (Todas)</mat-option>
+                        <mat-option *ngFor="let m of refs.mangas" [value]="m.descripcion">{{ m.descripcion
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Departamento</mat-label>
+                    <mat-select [(ngModel)]="filterDepto" (ngModelChange)="applyFilters()">
+                        <mat-option value="">Departamentos (Todos)</mat-option>
+                        <mat-option *ngFor="let d of refs.departamentos" [value]="d.descripcion">{{ d.descripcion
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button mat-icon-button (click)="resetAndApplyFilters()" matTooltip="Limpiar todos los filtros">
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </div>
+
+            <div class="product-variants-grid">
+                <mat-grid-list cols="4" rowHeight="250px" gutterSize="12px">
+                    <mat-grid-tile *ngFor="let product of productsToDisplay" (click)="addProductToCart(product)">
+                        <mat-card class="product-variant-card" [class.out-of-stock]="product.cantidad === 0">
+                            <img [src]="'assets/images/' + product.foto" alt="{{ product.nombre }}"
+                                class="variant-photo">
+                            <mat-card-header>
+                                <mat-card-title>{{ product.talla_descripcion }} | {{ product.color_descripcion
+                                    }}</mat-card-title>
+                                <mat-card-subtitle>{{ product.manga_descripcion }}</mat-card-subtitle>
+                            </mat-card-header>
+                            <mat-card-content class="variant-price-stock">
+                                <span class="price">${{ product.precio }}</span>
+                                <span class="stock" [class.low]="product.cantidad < 5">Stock: {{ product.cantidad
+                                    }}</span>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </div>
+
+            <div *ngIf="productsToDisplay.length === 0" class="no-results">
+                No se encontraron variantes que coincidan con los filtros seleccionados.
+            </div>
+
+        </div>
+    </mat-card-content>
+</mat-card>

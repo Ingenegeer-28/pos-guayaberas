@@ -1,0 +1,46 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-content>
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Usuario o Correo</mat-label>
+          <input matInput formControlName="username" placeholder="p.ej. admin@guayaberas.com" required>
+          <mat-icon matSuffix>person</mat-icon>
+          
+          <mat-error *ngIf="loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched">
+            El usuario es **obligatorio**.
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('username')?.hasError('email') && loginForm.get('username')?.touched">
+            El formato de correo es **inválido**.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" formControlName="password" required>
+          <mat-icon matSuffix>lock</mat-icon>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">
+            La contraseña es **obligatoria**.
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <mat-error *ngIf="error" class="login-error-message">
+      {{ error }}
+    </mat-error>
+
+    <mat-card-actions>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        class="full-width"
+        type="submit"
+        [disabled]="loginForm.invalid || loading"  (click)="onSubmit()">
+        
+        <mat-spinner *ngIf="loading" color="accent" [diameter]="20"></mat-spinner>
+        <span *ngIf="!loading">ACCEDER AL POS</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

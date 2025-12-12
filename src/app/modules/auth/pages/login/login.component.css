@@ -1,0 +1,49 @@
+/* 1. Contenedor del Login (Centrado vertical y horizontal) */
+.login-container {
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+  align-items: center; /* Centrado vertical (si es necesario) */
+  min-height: 100vh; /* Ocupa toda la altura de la ventana */
+  padding: 20px;
+  background-color: #f5f5f5; /* Color de fondo suave */
+}
+
+/* 2. Estilos de la Tarjeta de Login */
+.login-card {
+  /* Ancho Máximo en Escritorio */
+  max-width: 400px;
+  width: 100%; /* Permite que ocupe todo el ancho disponible si es menor a max-width */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para que los campos de formulario y botones ocupen el ancho completo */
+.full-width {
+  width: 100%;
+}
+.login-error-message {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.mat-spinner {
+  margin: 0 auto;
+}
+/* 3. Media Query para Responsividad */
+
+/* En pantallas pequeñas (móviles), podemos hacer que la tarjeta ocupe más ancho 
+   o eliminar el box-shadow si el fondo es similar. */
+@media (max-width: 600px) {
+  .login-container {
+    padding: 10px;
+  }
+
+  .login-card {
+    /* En pantallas muy pequeñas, dejamos que el ancho sea casi el 100% */
+    max-width: 100%;
+  }
+
+  /* El botón de acción en móvil a veces se ve mejor con menos margen */
+  mat-card-actions {
+    padding: 0 16px 16px;
+  }
+}
