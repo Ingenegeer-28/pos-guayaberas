@@ -14,9 +14,9 @@
     <mat-card-content class="content-wrapper">
 
         <div *ngIf="viewState === 'models'" class="model-grid-container">
-            <div *ngFor="let model of (models$ | async)" class="model-box mat-elevation-z1"
+            <div *ngFor="let model of allModels" class="model-box mat-elevation-z1"
                 (click)="selectModel(model)">
-                <img [src]="'assets/images/' + model.products[0].foto" alt="{{ model.descripcion }}"
+                <img [src]="model.products[0].foto != null ? 'assets/' + model.products[0].foto : 'assets/default-guaya-modelo.png'" alt="{{ model.descripcion }}"
                     class="model-image">
                 <div class="model-caption">
                     **{{ model.descripcion }}**
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div *ngIf="viewState === 'products' && (references$ | async) as refs" class="product-list-view">
+        <div *ngIf="viewState === 'products' " class="product-list-view">
 
             <div class="product-filters">
 
@@ -32,7 +32,7 @@
                     <mat-label>Talla</mat-label>
                     <mat-select [(ngModel)]="filterTalla" (ngModelChange)="applyFilters()">
                         <mat-option value="">Tallas (Todas)</mat-option>
-                        <mat-option *ngFor="let t of refs.tallas" [value]="t.descripcion">{{ t.descripcion
+                        <mat-option *ngFor="let t of productsToDisplay" [value]="t.talla_descripcion">{{ t.talla_descripcion
                             }}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -41,7 +41,7 @@
                     <mat-label>Color</mat-label>
                     <mat-select [(ngModel)]="filterColor" (ngModelChange)="applyFilters()">
                         <mat-option value="">Colores (Todos)</mat-option>
-                        <mat-option *ngFor="let c of refs.colores" [value]="c.descripcion">{{ c.descripcion
+                        <mat-option *ngFor="let c of colores" [value]="c.descripcion">{{ c.descripcion
                             }}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -50,7 +50,7 @@
                     <mat-label>Manga</mat-label>
                     <mat-select [(ngModel)]="filterManga" (ngModelChange)="applyFilters()">
                         <mat-option value="">Mangas (Todas)</mat-option>
-                        <mat-option *ngFor="let m of refs.mangas" [value]="m.descripcion">{{ m.descripcion
+                        <mat-option *ngFor="let m of mangas" [value]="m.descripcion">{{ m.descripcion
                             }}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -59,7 +59,7 @@
                     <mat-label>Departamento</mat-label>
                     <mat-select [(ngModel)]="filterDepto" (ngModelChange)="applyFilters()">
                         <mat-option value="">Departamentos (Todos)</mat-option>
-                        <mat-option *ngFor="let d of refs.departamentos" [value]="d.descripcion">{{ d.descripcion
+                        <mat-option *ngFor="let d of departamentos" [value]="d.descripcion">{{ d.descripcion
                             }}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -73,7 +73,7 @@
                 <mat-grid-list cols="4" rowHeight="250px" gutterSize="12px">
                     <mat-grid-tile *ngFor="let product of productsToDisplay" (click)="addProductToCart(product)">
                         <mat-card class="product-variant-card" [class.out-of-stock]="product.cantidad === 0">
-                            <img [src]="'assets/images/' + product.foto" alt="{{ product.nombre }}"
+                            <img [src]="product.foto != null ? 'assets/' + product.foto : 'assets/default-guaya-img.png'" alt="{{ product.nombre }}"
                                 class="variant-photo">
                             <mat-card-header>
                                 <mat-card-title>{{ product.talla_descripcion }} | {{ product.color_descripcion

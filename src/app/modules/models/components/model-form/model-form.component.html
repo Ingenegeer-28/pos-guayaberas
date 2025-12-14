@@ -1,152 +1,31 @@
-<mat-card class="model-creation-card">
-    <mat-card-header style="display: flex; justify-content: space-between;">
-        <mat-card-title>Crear Nuevo Modelo Base y sus Variantes</mat-card-title>
-        <button mat-raised-button color="accent" (click)="openReferenceModal()">
-            <mat-icon>settings</mat-icon> Gestionar Referencias
-        </button>
-    </mat-card-header>
-    <mat-divider></mat-divider>
-
-    <div class="form-wrapper">
-
-        <form [formGroup]="modelForm" (ngSubmit)="onSubmit()">
-
-            <mat-expansion-panel [expanded]="true" class="mb-4">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>1. Configuración del Modelo Base</mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <div class="row">
-                    <mat-form-field appearance="outline" class="col-md-6">
-                        <mat-label>Nombre del Modelo Base</mat-label>
-                        <input matInput formControlName="nombre" placeholder="Ej: Guayabera Panal">
-                        <mat-error *ngIf="modelForm.get('nombre')?.hasError('required')">Requerido</mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline" class="col-md-6">
-                        <mat-label>Departamento</mat-label>
-                        <mat-select formControlName="departamento">
-                            <mat-option *ngFor="let d of departamentos" [value]="d.id">{{ d.descripcion }}
-                            </mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="modelForm.get('departamento')?.hasError('required')">Requerido</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="row">
-                    <mat-form-field appearance="outline" class="col-md-4">
-                        <mat-label>Precio Base</mat-label>
-                        <input matInput type="number" formControlName="precioBase" placeholder="0.00">
-                        <mat-icon matSuffix>attach_money</mat-icon>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline" class="col-md-4">
-                        <mat-label>Stock Inicial (por variante)</mat-label>
-                        <input matInput type="number" formControlName="stockInicial" placeholder="0">
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline" class="col-md-4">
-                        <mat-label>Estatus</mat-label>
-                        <mat-select formControlName="estatus">
-                            <mat-option [value]="1">Activo</mat-option>
-                            <mat-option [value]="0">Inactivo</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*"
-                            style="display: none;">
-                        <button mat-flat-button color="accent" type="button" (click)="fileInput.click()">
-                            <mat-icon>image</mat-icon> Seleccionar Imagen Principal
-                        </button>
-                        <mat-hint *ngIf="selectedFileName">{{ selectedFileName }}</mat-hint>
+<h2 mat-dialog-title>Elige agregar nuevos modelos o sus varientes</h2>
+<mat-dialog-content>
+    <mat-tab-group>
+        <mat-tab label="Modelos">
+            <div class="reference-content">
+                <mat-divider></mat-divider>
+                <form [formGroup]="newModelForm" class="mt-3">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Nombre del modelo</mat-label>
+                        <input matInput formControlName="nombre">
                         <mat-error
-                            *ngIf="modelForm.get('imageFile')?.hasError('required') && modelForm.get('imageFile')?.touched">Imagen
-                            requerida</mat-error>
-                    </div>
-                </div>
-
-            </mat-expansion-panel>
-
-            <mat-expansion-panel [expanded]="true" class="mb-4">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>2. Seleccione Atributos para Variantes</mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <div class="row">
-                    <mat-form-field appearance="outline" class="col-md-4">
-                        <mat-label>Tallas disponibles</mat-label>
-                        <mat-select formControlName="tallas" multiple>
-                            <mat-option *ngFor="let t of tallas" [value]="t.id">{{ t.descripcion
-                                }}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="modelForm.get('tallas')?.hasError('required')">Requerido</mat-error>
+                            *ngIf="newModelForm.get('nombre')?.hasError('required')">Requerido</mat-error>
                     </mat-form-field>
-
-                    <mat-form-field appearance="outline" class="col-md-4">
-                        <mat-label>Tipos de Manga</mat-label>
-                        <mat-select formControlName="mangas" multiple>
-                            <mat-option *ngFor="let m of mangas" [value]="m.id">{{ m.descripcion
-                                }}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="modelForm.get('mangas')?.hasError('required')">Requerido</mat-error>
+                    
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Descripcion</mat-label>
+                        <input matInput formControlName="description">
+                        <mat-error
+                            *ngIf="newModelForm.get('description')?.hasError('required')">Requerido</mat-error>
                     </mat-form-field>
-
-                    <mat-form-field appearance="fill">
-                        <mat-label>Color (Texto Libre)</mat-label>
-                        <input matInput formControlName="colorTexto" placeholder="Ej: Azul Rey">
-                        <mat-select formControlName="colorTexto">
-                            <mat-option *ngFor="let color of colores" [value]="color.id">
-                                {{color.descripcion}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" class="col-md-4">
-                        <mat-label>Color (Texto Libre)</mat-label>
-                        <input matInput formControlName="colorTexto" placeholder="Ej: Azul Rey">
-                        <mat-error *ngIf="modelForm.get('colorTexto')?.hasError('required')">Requerido</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="d-flex justify-content-end mt-3">
-                    <button mat-raised-button type="button" color="accent" [disabled]="modelForm.invalid"
-                        (click)="generateVariants()">
-                        <mat-icon>shuffle</mat-icon> Generar {{ (modelForm.get('tallas')?.value?.length || 0) *
-                        (modelForm.get('mangas')?.value?.length || 0) * (modelForm.get('colores')?.value?.length || 0)
-                        }} Variantes
+                    <button mat-raised-button color="primary" [disabled]="newModelForm.invalid" type="submit">
+                        <mat-icon>add</mat-icon> Agregar Talla
                     </button>
-                </div>
-
-            </mat-expansion-panel>
-
-
-            <mat-expansion-panel [expanded]="generatedVariants.length > 0">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>3. Previsualización ({{ generatedVariants.length }} Variantes)</mat-panel-title>
-                </mat-expansion-panel-header>
-
-                <mat-list *ngIf="generatedVariants.length > 0" class="variant-preview-list">
-                    <mat-list-item *ngFor="let variant of generatedVariants">
-                        <mat-icon matListItemAvatar>fiber_manual_record</mat-icon>
-                        <h4 matListItemTitle>{{ variant.descripcion }}</h4>
-                        <p matListItemLine>Precio: {{ variant.precio | currency }} | Stock: {{ variant.stock }} | Manga
-                            ID: {{ variant.tipo_manga }}</p>
-                    </mat-list-item>
-                </mat-list>
-
-                <p *ngIf="generatedVariants.length === 0" class="text-center text-muted">Haga clic en 'Generar
-                    Variantes' para previsualizar.</p>
-
-                <div class="d-flex justify-content-end mt-4">
-                    <button mat-raised-button color="primary" type="submit" [disabled]="generatedVariants.length === 0">
-                        <mat-icon>save</mat-icon> Guardar {{ generatedVariants.length }} Productos
-                    </button>
-                </div>
-
-            </mat-expansion-panel>
-
-        </form>
-    </div>
-</mat-card>
+                </form>
+            </div>
+        </mat-tab>
+        <mat-tab label="Variantes">
+            <app-reference-form></app-reference-form>
+        </mat-tab>
+    </mat-tab-group>
+</mat-dialog-content>

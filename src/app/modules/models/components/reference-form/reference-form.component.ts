@@ -1,29 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, Subscription } from 'rxjs';
-import { ConfigDataResponse, Departamento, Reference } from 'src/app/core/models/config.model'; // Asume esta ruta
+import { Reference } from 'src/app/core/models/config.model';
 import { ProductCreationRequest } from 'src/app/core/models/product.model';
-import { ModelConfigService } from 'src/app/core/services/model-config.service'; // Servicio de referencias
-import { ProductService } from 'src/app/core/services/product.service'; // Servicio de guardado
+import { ModelConfigService } from 'src/app/core/services/model-config.service';
+import { ProductService } from 'src/app/core/services/product.service';
 import { ReferenceModalComponent } from '../reference-modal/reference-modal.component';
-// Importar la interfaz para el request (la definiremos conceptualmente)
 
 @Component({
-  selector: 'app-model-form',
-  templateUrl: './model-form.component.html',
-  styleUrls: ['./model-form.component.css']
+  selector: 'app-reference-form',
+  templateUrl: './reference-form.component.html',
+  styleUrls: ['./reference-form.component.css']
 })
-export class ModelFormComponent implements OnInit {
+export class ReferenceFormComponent implements OnInit {
   
   departamentos: Reference[] = [];
   tallas: Reference[] = [];
   colores: Reference[] = [];
   modelos: Reference[] = [];
   mangas: Reference[] = [];
-
   modelForm!: FormGroup;
-  newModelForm!: FormGroup;
   // references$!: Observable<ConfigDataResponse>; // Datos de Tallas, Colores, Mangas, etc.
  
   // Lista de productos finales generados por la combinación de atributos
@@ -43,18 +39,11 @@ export class ModelFormComponent implements OnInit {
   ngOnInit(): void {
     // Cargar todas las referencias necesarias
     // this.references$ = this.configService.getReferences();
-
+    this.loadReferences();
     this.initForm();
   }
 
   initForm(): void {
-    this.newModelForm = this.fb.group({
-      // El ID de la referencia, si es autonumérico, no se pide. Si es manual (ej. "32"), sí.
-      // Aquí solo pedimos la descripción y el tipo de referencia a crear
-      description: ['', Validators.required],
-      nombre: ['', Validators.required]
-    });
-
     this.modelForm = this.fb.group({
       // PROPIEDADES DEL MODELO BASE
       nombre: ['', Validators.required], 

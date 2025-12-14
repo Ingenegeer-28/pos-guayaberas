@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
-import { ConfigDataResponse } from 'src/app/core/models/config.model';
+import {
+  Observable,
+  BehaviorSubject,
+  combineLatest,
+  map,
+  startWith,
+  Subscription,
+} from 'rxjs';
+import { ConfigDataResponse, Reference } from 'src/app/core/models/config.model';
 import { ModelView, ProductVariant } from 'src/app/core/models/pos.model';
 import { Product } from 'src/app/core/models/product.model';
 import { CartService } from 'src/app/core/services/cart.service';
@@ -10,59 +17,75 @@ import { ProductService } from 'src/app/core/services/product.service';
 @Component({
   selector: 'app-product-selector',
   templateUrl: './product-selector.component.html',
-  styleUrls: ['./product-selector.component.css']
+  styleUrls: ['./product-selector.component.css'],
 })
 export class ProductSelectorComponent implements OnInit {
-  
   // Estado de la vista: muestra la lista de modelos o los productos de un modelo
   viewState: 'models' | 'products' = 'models';
-  
+
   // Modelo seleccionado actualmente
   selectedModel: ModelView | null = null;
 
+  allModels: ModelView[] = [];
+  modelsToDisplay: ModelView[] = [];
   // Lista de modelos agrupados
-  models$!: Observable<ModelView[]>; 
-  
+  models$!: Observable<ModelView[]>;
+
   // Datos de referencia para los filtros (tallas, colores, etc.)
   references$!: Observable<ConfigDataResponse>;
 
   // Fuente de datos de los productos del modelo seleccionado
-  modelProductsSource: Product[] = []; 
+  modelProductsSource: Product[] = [];
   // Productos que se muestran en la cuadrícula (después de aplicar filtros)
   productsToDisplay: Product[] = [];
-
+  variantsToDisplay: Product[] = [];
+  private modelsSubscription!: Subscription;
   // Filtros de búsqueda (Reactive Forms o ngModel - usaremos ngModel para simplicidad)
   filterTalla: string = '';
   filterColor: string = '';
   filterDepto: string = '';
   filterManga: string = '';
-  
+
+  departamentos: Reference[] = [];
+  tallas: Reference[] = [];
+  colores: Reference[] = [];
+  modelos: Reference[] = [];
+  mangas: Reference[] = [];
+
   // Lista de productos del modelo seleccionado, después de aplicar filtros
   filteredProducts$!: Observable<Product[]>;
 
   constructor(
-    private productService: ProductService, 
+    private productService: ProductService,
     private configService: ModelConfigService,
     private cartService: CartService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Cargar todos los datos de referencia para los selectores de filtro
     // this.references$ = this.configService.getReferences();
-    
+    this.loadReferences();
     // Aquí cargarías y agruparías los productos del backend/JSON por modelo
     // this.models$ = this.productService.getGroupedModels(); // <-- ASUME que este método existe
-    
+    this.modelsSubscription = this.productService.getGroupedModels().subscribe({
+      next: (models) => {
+        this.allModels = models;
+        console.log(models);
+        this.modelsToDisplay = models; // Inicialmente muestra todos los modelos
+      },
+      error: (err) => {
+        console.error('Error al cargar y agrupar modelos:', err);
+        // Mostrar un mensaje de error o una alerta al usuario
+      },
+    });
     // Inicializar el observable de productos filtrados (lógica avanzada)
     // this.setupFilteredProducts();
   }
-  
-  
+
   // 1. Navegación: Seleccionar un modelo para ver sus productos
   selectModel(model: ModelView): void {
     this.selectedModel = model;
     this.viewState = 'products';
-    
     // Inicializar la fuente y la vista de productos
     this.modelProductsSource = model.products;
     this.resetAndApplyFilters(); // Cargar todos los productos del modelo
@@ -77,31 +100,39 @@ export class ProductSelectorComponent implements OnInit {
   // 3. Método central que aplica todos los filtros y actualiza productsToDisplay
   applyFilters(): void {
     let filtered = this.modelProductsSource;
-    
+
     // Aplicación de todos los filtros seleccionados
     if (this.filterTalla) {
-      filtered = filtered.filter(p => p.talla_descripcion === this.filterTalla);
+      filtered = filtered.filter(
+        (p) => p.talla_descripcion === this.filterTalla
+      );
     }
     if (this.filterColor) {
-      filtered = filtered.filter(p => p.color_descripcion === this.filterColor);
+      filtered = filtered.filter(
+        (p) => p.color_descripcion === this.filterColor
+      );
     }
     if (this.filterDepto) {
-      filtered = filtered.filter(p => p.departamento_descripcion === this.filterDepto);
+      filtered = filtered.filter(
+        (p) => p.departamento_descripcion === this.filterDepto
+      );
     }
     if (this.filterManga) {
-      filtered = filtered.filter(p => p.manga_descripcion === this.filterManga);
+      filtered = filtered.filter(
+        (p) => p.manga_descripcion === this.filterManga
+      );
     }
-
+    console.log(filtered);
     this.productsToDisplay = filtered;
   }
-  
+
   // 4. Resetear filtros
   resetAndApplyFilters(): void {
-      this.filterTalla = '';
-      this.filterColor = '';
-      this.filterDepto = '';
-      this.filterManga = '';
-      this.applyFilters();
+    this.filterTalla = '';
+    this.filterColor = '';
+    this.filterDepto = '';
+    this.filterManga = '';
+    this.applyFilters();
   }
 
   // 3. Lógica de Filtrado Reactivo
@@ -110,45 +141,53 @@ export class ProductSelectorComponent implements OnInit {
     const filterChanges$ = combineLatest([
       // Emitir el modelo seleccionado (o null)
       this.models$.pipe(
-          map(models => models.find(m => m.id_modelo === this.selectedModel?.id_modelo) || null)
+        map(
+          (models) =>
+            models.find((m) => m.id_modelo === this.selectedModel?.id_modelo) ||
+            null
+        )
       ),
       // Crear un observable que combina todos los filtros de ngModel
       new BehaviorSubject<any>({}).pipe(
-          startWith({
-              talla: this.filterTalla,
-              color: this.filterColor,
-              depto: this.filterDepto,
-              manga: this.filterManga
-          })
-      )
+        startWith({
+          talla: this.filterTalla,
+          color: this.filterColor,
+          depto: this.filterDepto,
+          manga: this.filterManga,
+        })
+      ),
     ]);
 
     this.filteredProducts$ = filterChanges$.pipe(
       map(([model, filters]) => {
         if (!model) return [];
-        
-        return model.products.filter(p => {
+
+        return model.products.filter((p) => {
           // Aplicar filtros: Si el filtro está vacío (''), se acepta
-          const matchTalla = !filters.talla || p.talla_descripcion === filters.talla;
-          const matchColor = !filters.color || p.color_descripcion === filters.color;
-          const matchDepto = !filters.depto || p.departamento_descripcion === filters.depto;
-          const matchManga = !filters.manga || p.manga_descripcion === filters.manga;
+          const matchTalla =
+            !filters.talla || p.talla_descripcion === filters.talla;
+          const matchColor =
+            !filters.color || p.color_descripcion === filters.color;
+          const matchDepto =
+            !filters.depto || p.departamento_descripcion === filters.depto;
+          const matchManga =
+            !filters.manga || p.manga_descripcion === filters.manga;
 
           return matchTalla && matchColor && matchDepto && matchManga;
         });
       })
     );
   }
-  
+
   // 4. Resetear filtros
   resetFilters(): void {
-      this.filterTalla = '';
-      this.filterColor = '';
-      this.filterDepto = '';
-      this.filterManga = '';
-      // Necesitarías emitir un evento para notificar el cambio a setupFilteredProducts
-      // (Si usas ngModel, la plantilla manejaría esto automáticamente si está vinculada)
-      this.setupFilteredProducts();
+    this.filterTalla = '';
+    this.filterColor = '';
+    this.filterDepto = '';
+    this.filterManga = '';
+    // Necesitarías emitir un evento para notificar el cambio a setupFilteredProducts
+    // (Si usas ngModel, la plantilla manejaría esto automáticamente si está vinculada)
+    this.setupFilteredProducts();
   }
 
   // 5. Añadir al Carrito (igual que antes)
@@ -177,4 +216,29 @@ export class ProductSelectorComponent implements OnInit {
   //         // Añadir otras propiedades necesarias para el carrito
   //     } as Product;
   // }
+
+  loadReferences(): void {
+    this.configService.getModelos().subscribe((data) => {
+      this.modelos = data;
+    });
+    // Cargar mangas
+    this.configService.getMangas().subscribe((data) => {
+      this.mangas = data;
+    });
+
+    // Cargar Departamentos
+    this.configService.getDepartamentos().subscribe((data) => {
+      this.departamentos = data;
+    });
+
+    // Cargar Tallas
+    this.configService.getTallas().subscribe((data) => {
+      this.tallas = data;
+    });
+
+    // Cargar Colores
+    this.configService.getColores().subscribe((data) => {
+      this.colores = data;
+    });
+  }
 }

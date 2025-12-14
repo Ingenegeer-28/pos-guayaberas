@@ -35,7 +35,7 @@
 
             <div *ngFor="let model of modelsToDisplay" class="model-box mat-elevation-z2" (click)="selectModel(model)">
 
-                <img [src]="'assets/images/' + model.products[0].foto" alt="{{ model.descripcion }}"
+                <img [src]="model.products[0].foto != null ? 'assets/' + model.products[0].foto : 'assets/default-guaya-img.png'" alt="{{ model.descripcion }}"
                     class="model-image">
                 <div class="model-caption">
                     <h4>{{ model.descripcion }}</h4>
@@ -55,7 +55,7 @@
                 <mat-divider></mat-divider>
 
                 <mat-list-item *ngFor="let variant of variantsToDisplay" class="variant-item">
-                    <img matListItemAvatar [src]="'assets/images/' + variant.foto" alt="{{ variant.nombre }}">
+                    <img matListItemAvatar [src]="variant.foto != null ? 'assets/' + variant.foto : 'assets/default-guaya-img.png'" alt="{{ variant.nombre }}">
 
                     <h4 matListItemTitle>
                         {{ variant.talla_descripcion }} | {{ variant.color_descripcion }} ({{ variant.manga_descripcion
