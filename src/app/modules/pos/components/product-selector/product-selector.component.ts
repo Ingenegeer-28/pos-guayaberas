@@ -70,7 +70,6 @@ export class ProductSelectorComponent implements OnInit {
     this.modelsSubscription = this.productService.getGroupedModels().subscribe({
       next: (models) => {
         this.allModels = models;
-        console.log(models);
         this.modelsToDisplay = models; // Inicialmente muestra todos los modelos
       },
       error: (err) => {
@@ -122,7 +121,6 @@ export class ProductSelectorComponent implements OnInit {
         (p) => p.manga_descripcion === this.filterManga
       );
     }
-    console.log(filtered);
     this.productsToDisplay = filtered;
   }
 

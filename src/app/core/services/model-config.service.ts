@@ -86,6 +86,24 @@ export class ModelConfigService {
     return this.getReferences('modelos');
   }
   
+  getReference(table_name: string, id: number): Observable<Reference> {
+    return this.http.get<any>(`${this.API_BASE_URL}${table_name}/${id}`).pipe(
+      map(response => {
+        if (table_name == 'tipos_manga') {
+          table_name = 'mangas'
+        }
+        const pk_name = table_name === 'colores' ? 'id_' + table_name.slice(0, -2) : 'id_' + table_name.slice(0, -1); // 'tallas' -> 'id_talla', 'modelos' -> 'id_modelo'
+    
+        const prodcuto = response.data;
+        // console.log(response.data);
+        const retornado : Reference = {
+          id: response.data[pk_name],
+          descripcion: response.data.descripcion
+        }
+        return retornado;
+      })
+    );
+  }
   // --- MÉTODOS CRUD (POST, PUT, DELETE) ---
 
   createReference(table_name: string, descripcion: string): Observable<any> {

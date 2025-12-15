@@ -44,7 +44,6 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
     this.modelsSubscription = this.productService.getGroupedModels().subscribe({
       next: (models) => {
         this.allModels = models;
-        console.log(models);
         this.modelsToDisplay = models; // Inicialmente muestra todos los modelos
       },
       error: (err) => {

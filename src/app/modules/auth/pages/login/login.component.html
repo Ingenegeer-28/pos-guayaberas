@@ -1,12 +1,18 @@
 <div class="login-container">
   <mat-card class="login-card">
+    <mat-card-header class="header-login-img">
+      <div class="logo-area">
+        <img src="../../../../assets/GuayaPos-icono.png" alt="POS Guayaberas Logo" class="logo">
+        <!-- <h3 class="app-name">POS Guayaberas</h3> -->
+      </div>
+    </mat-card-header>
     <mat-card-content>
       <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Usuario o Correo</mat-label>
           <input matInput formControlName="username" placeholder="p.ej. admin@guayaberas.com" required>
           <mat-icon matSuffix>person</mat-icon>
-          
+
           <mat-error *ngIf="loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched">
             El usuario es **obligatorio**.
           </mat-error>
@@ -31,13 +37,9 @@
     </mat-error>
 
     <mat-card-actions>
-      <button 
-        mat-raised-button 
-        color="primary" 
-        class="full-width"
-        type="submit"
-        [disabled]="loginForm.invalid || loading"  (click)="onSubmit()">
-        
+      <button mat-raised-button color="primary" class="full-width" type="submit"
+        [disabled]="loginForm.invalid || loading" (click)="onSubmit()">
+
         <mat-spinner *ngIf="loading" color="accent" [diameter]="20"></mat-spinner>
         <span *ngIf="!loading">ACCEDER AL POS</span>
       </button>

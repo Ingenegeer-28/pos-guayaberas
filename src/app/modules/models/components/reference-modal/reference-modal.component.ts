@@ -78,7 +78,6 @@ export class ReferenceModalComponent implements OnInit {
   // }
 
   loadReferences(type: string): void {
-    console.log(type);
     // Cargar modelos
     this.newReferenceForm.get('type')?.setValue(type);
     this.configService.getModelos().subscribe(data => {

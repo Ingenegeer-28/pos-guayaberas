@@ -28,6 +28,20 @@
 .mat-spinner {
   margin: 0 auto;
 }
+.header-login-img {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+.logo-area {
+  padding: 5px;
+}
+
+.logo {
+  width: 150px;
+  height: 150px;
+  /* (Asumiendo que tienes un logo en assets) */
+}
 /* 3. Media Query para Responsividad */
 
 /* En pantallas pequeñas (móviles), podemos hacer que la tarjeta ocupe más ancho 

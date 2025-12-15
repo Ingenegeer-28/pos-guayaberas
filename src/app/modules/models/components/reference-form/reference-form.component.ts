@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Reference } from 'src/app/core/models/config.model';
@@ -13,7 +13,7 @@ import { ReferenceModalComponent } from '../reference-modal/reference-modal.comp
   styleUrls: ['./reference-form.component.css']
 })
 export class ReferenceFormComponent implements OnInit {
-  
+  @Input() selectedModel!: Reference;
   departamentos: Reference[] = [];
   tallas: Reference[] = [];
   colores: Reference[] = [];
@@ -46,7 +46,7 @@ export class ReferenceFormComponent implements OnInit {
   initForm(): void {
     this.modelForm = this.fb.group({
       // PROPIEDADES DEL MODELO BASE
-      nombre: ['', Validators.required], 
+      nombre: [this.selectedModel?.descripcion || '', Validators.required], 
       departamento: ['', Validators.required],
       precioBase: [0, [Validators.required, Validators.min(0)]], 
       stockInicial: [0, [Validators.required, Validators.min(0)]], 
@@ -71,7 +71,6 @@ export class ReferenceFormComponent implements OnInit {
     // Cargar mangas
     this.configService.getMangas().subscribe(data => {
       this.mangas = data;
-            console.log(this.mangas);
     });
     
     // Cargar Departamentos

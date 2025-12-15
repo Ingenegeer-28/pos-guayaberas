@@ -96,7 +96,6 @@ export class ProductService {
       // 2. Transforma la lista plana (Product[]) en ModelView[] (agrupados)
       
       map((products: Product[]) => {
-        console.log(products);
         // Usamos un Map para agrupar las variantes por la descripción del modelo
         const groupedMap = products.reduce((acc, currentProduct) => {
           

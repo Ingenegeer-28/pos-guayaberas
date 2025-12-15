@@ -17,10 +17,19 @@
                 </mat-expansion-panel-header>
 
                 <div class="row">
-                    <mat-form-field appearance="outline" class="col-md-6">
+                    <mat-form-field appearance="outline" class="col-md-6" *ngIf="selectedModel">
                         <mat-label>Nombre del Modelo Base</mat-label>
                         <input matInput formControlName="nombre" placeholder="Ej: Guayabera Panal">
                         <mat-error *ngIf="modelForm.get('nombre')?.hasError('required')">Requerido</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-md-6" *ngIf="!selectedModel">
+                        <mat-label>Modelos</mat-label>
+                        <mat-select formControlName="nombre">
+                            <mat-option *ngFor="let d of modelos" [value]="d.id">{{ d.descripcion }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="modelForm.get('departamento')?.hasError('required')">Requerido</mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="col-md-6">
@@ -114,9 +123,7 @@
                     <button mat-raised-button type="button" color="accent" [disabled]="modelForm.invalid"
                         (click)="generateVariants()">
                         <mat-icon>shuffle</mat-icon> Generar {{ (modelForm.get('tallas')?.value?.length ||
-                        0) *
-                        (modelForm.get('mangas')?.value?.length || 0) *
-                        (modelForm.get('colores')?.value?.length || 0)
+                        0) * (modelForm.get('mangas')?.value?.length || 0) 
                         }} Variantes
                     </button>
                 </div>

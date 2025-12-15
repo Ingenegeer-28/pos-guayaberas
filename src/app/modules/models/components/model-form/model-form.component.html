@@ -1,31 +1,32 @@
 <h2 mat-dialog-title>Elige agregar nuevos modelos o sus varientes</h2>
 <mat-dialog-content>
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="cambiosTab($event.tab.textLabel.toLowerCase().replace(' ', ''))">
         <mat-tab label="Modelos">
-            <div class="reference-content">
+            <div class="reference-content" style="margin-top: 10px;">
                 <mat-divider></mat-divider>
-                <form [formGroup]="newModelForm" class="mt-3">
+                <form [formGroup]="newModelForm" class="mt-3" (ngSubmit)="onSubmit()">
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>Nombre del modelo</mat-label>
                         <input matInput formControlName="nombre">
-                        <mat-error
-                            *ngIf="newModelForm.get('nombre')?.hasError('required')">Requerido</mat-error>
+                        <mat-error *ngIf="newModelForm.get('nombre')?.hasError('required')">Requerido</mat-error>
                     </mat-form-field>
-                    
+
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>Descripcion</mat-label>
                         <input matInput formControlName="description">
-                        <mat-error
-                            *ngIf="newModelForm.get('description')?.hasError('required')">Requerido</mat-error>
+                        <mat-error *ngIf="newModelForm.get('description')?.hasError('required')">Requerido</mat-error>
                     </mat-form-field>
-                    <button mat-raised-button color="primary" [disabled]="newModelForm.invalid" type="submit">
-                        <mat-icon>add</mat-icon> Agregar Talla
-                    </button>
+                    <mat-card-actions align="end" class="form-actions">
+                        <button mat-button routerLink="/models">CANCELAR</button>
+                        <button mat-raised-button color="primary" [disabled]="newModelForm.invalid" type="submit">
+                            <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon> {{ isEditMode ? 'Guardar Cambios' : 'Crear modelo' }}
+                        </button>
+                    </mat-card-actions>
                 </form>
             </div>
         </mat-tab>
         <mat-tab label="Variantes">
-            <app-reference-form></app-reference-form>
+            <app-reference-form [selectedModel]="selectedModel" *ngIf="isVariantes"></app-reference-form>
         </mat-tab>
     </mat-tab-group>
 </mat-dialog-content>
