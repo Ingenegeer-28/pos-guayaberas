@@ -15,7 +15,7 @@ import { ModelConfigService } from 'src/app/core/services/model-config.service';
 })
 export class ModelsPageComponent implements OnInit, OnDestroy {
   // Columnas a mostrar en la tabla
-  displayedColumns: string[] = ['id_modelo', 'descripcion', 'actions'];
+  displayedColumns: string[] = ['id', 'descripcion', 'actions'];
 
   modelos: Reference[] = [];
   // Fuente de datos de la tabla de Material

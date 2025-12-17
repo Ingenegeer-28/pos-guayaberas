@@ -19,7 +19,7 @@ export interface ProductVariant {
 }
 
 export interface ModelView {
-  id_modelo: string;
+  id_modelo: number;
   descripcion: string;
   products: Product[];
 }

@@ -1,8 +1,5 @@
 <div class="product-form-container">
     <h2>{{ pageTitle }}</h2>
-    <button mat-raised-button color="primary" (click)="validateExistIem()">
-        <mat-icon>add</mat-icon> validar
-    </button>
     <mat-card class="product-card">
         <mat-card-content>
             <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">

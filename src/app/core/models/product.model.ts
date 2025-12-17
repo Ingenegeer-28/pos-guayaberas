@@ -19,11 +19,11 @@ export interface ProductCreationRequest {
     sku: string; //id_modelo-id_talla-id_manga-id_color
     precio: number;
     stock: number;
-    id_manga: string;
+    id_manga: number;
     id_talla: number;
     id_color: number;
     estatus_producto: boolean;
-    id_departamento: string;
+    id_departamento: number;
     tipo_producto: string;
     foto: string;
     imagen: { imgT: string; imgValue: string }[];
@@ -40,17 +40,17 @@ export interface Product {
     id_producto: number ;
     nombre: string;
     sku: string; // Asumimos SKU basado en variantes
-    id_modelo: string;
+    id_modelo: number;
     modelo_descripcion: string;
     descripcion: string;
-    id_departamento: string;
+    id_departamento: number;
     departamento_descripcion: string;
     foto: string;
     cantidad: number; // Stock (lo convertiremos a número en JS)
     precio: string; // Mantener como string, ya que el JSON lo define así
-    id_talla: string;
+    id_talla: number;
     talla_descripcion: string;
-    id_manga: string;
+    id_manga: number;
     manga_descripcion: string;
     id_color: number; 
     color_descripcion: string;

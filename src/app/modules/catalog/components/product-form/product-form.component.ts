@@ -113,18 +113,19 @@ export class ProductFormComponent implements OnInit {
       this.productForm.markAllAsTouched();
       return;
     }
-
-    console.log(this.productForm.value);
     const requestProd = this.createRequestProd(this.productForm);
-    const productData: ProductCreationRequest = this.productForm.value;
     console.log(requestProd);
+    if (this.validateExistIem(requestProd)) {
+      console.log('🛑 producto existente con los valores insertados, verifique');
+      return;
+    }  
     if (this.isEditMode) {
       // Lógica de Actualización
       this.productService
-        .updateProduct(this.selectedProduct.id_producto, productData)
+        .updateProduct(this.selectedProduct.id_producto, requestProd)
         .subscribe({
           next: (respuesta) => {
-            console.log('Producto actualizado:', productData.nombre);
+            console.log('Producto actualizado:', requestProd.descripcion);
             // Mostrar notificación y navegar
             this.productService.loadGroupedModelos();
             this.router.navigate(['/catalog']);
@@ -196,15 +197,21 @@ export class ProductFormComponent implements OnInit {
     };
     return produ;
   }
-  validateExistIem(): void {
-    const formValue = this.productForm.value;
-    console.log(formValue.nombre);
+  validateExistIem(request: ProductCreationRequest): boolean {
     const allModels = this.productService.getAllModelsSync();
-    const mmmmmm = allModels.find((modl) => modl.id_modelo == formValue.nombre);
-    if (mmmmmm) {
-      console.log(mmmmmm.products);
+    const model = allModels.find((modl) => modl.id_modelo == request.id_modelo);
+    var existe = false;
+    if (model) {
+      const produto = model.products.find((prd) =>
+        prd.id_modelo == request.id_modelo && prd.id_manga == request.id_manga && prd.id_talla == request.id_talla && prd.id_departamento == request.id_departamento && prd.id_color == request.id_color
+      );
+      if (produto != undefined) {
+        existe = true;
+      }
     }
+    return existe;
   }
+
   loadReferences(): void {
     this.configService.getModelos().subscribe((data) => {
       this.modelos = data;
