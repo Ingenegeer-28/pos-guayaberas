@@ -11,24 +11,17 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ProductService {
   
+  // Propiedades Reactivas para Catálogo (Ya no son estáticas)
+  private modelsSubject = new BehaviorSubject<ModelView[]>([]);
+  public availableModels$ = this.modelsSubject.asObservable(); 
   // URL base de la API de PHP para productos
   private readonly API_PRODUCTS_URL = 'http://localhost/api-guaya-pos/productos/index.php'; 
 
-  // Datos de Guayaberas de prueba
-  // private initialProducts: Product[] = [
-  //   { id: 1, sku: 'G-AZ-M', name: 'Guayabera Clásica', description: 'Azul cielo, manga larga.', price: 59.99, size: 'M', color: 'Azul', stock: 25, isActive: true },
-  //   { id: 2, sku: 'G-BL-L', name: 'Guayabera Presidencial', description: 'Blanca, lino, perfecta para eventos.', price: 89.99, size: 'L', color: 'Blanco', stock: 10, isActive: true },
-  //   { id: 3, sku: 'G-GR-S', name: 'Guayabera Casual', description: 'Gris jaspeado, algodón, manga corta.', price: 45.00, size: 'S', color: 'Gris', stock: 40, isActive: true },
-  //   { id: 4, sku: 'G-RD-XL', name: 'Guayabera Fiesta', description: 'Roja, bordado elegante.', price: 75.50, size: 'XL', color: 'Rojo', stock: 5, isActive: true },
-  // ];
-
-  // private productsSubject = new BehaviorSubject<Product[]>(this.initialProducts);
-  // products$ = this.productsSubject.asObservable(); // Fuente de datos reactiva
-
-
   constructor(private configService: ModelConfigService,
     private http: HttpClient
-  ) { }
+  ) {
+    this.loadGroupedModelos();
+   }
 
   /**
    * Obtiene todos los productos/variantes del catálogo.
@@ -83,7 +76,21 @@ export class ProductService {
   //   }
   //   return of(updatedProduct);
   // }
-  
+  loadGroupedModelos():void{
+    var modelados = this.getGroupedModels().subscribe({
+      next: (models) => {
+        console.log('Catálogo cargado desde la API.');
+        this.modelsSubject.next(models);
+      },
+      error: (err) => {
+        console.error('Error al cargar y agrupar modelos:', err);
+        // Mostrar un mensaje de error o una alerta al usuario
+      },
+    });
+  }
+  public getAllModelsSync(): ModelView[] {
+    return this.modelsSubject.value;
+  }
   /**
    * Obtiene todos los productos de la API y los agrupa por Modelo para la vista de catálogo.
    * @returns Observable<ModelView[]>

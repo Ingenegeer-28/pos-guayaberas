@@ -14,7 +14,7 @@
     <mat-card-content class="content-wrapper">
 
         <div *ngIf="viewState === 'models'" class="model-grid-container">
-            <div *ngFor="let model of allModels" class="model-box mat-elevation-z1"
+            <div *ngFor="let model of (models$ | async)" class="model-box mat-elevation-z1"
                 (click)="selectModel(model)">
                 <img [src]="model.products[0].foto != null ? 'assets/' + model.products[0].foto : 'assets/default-guaya-modelo.png'" alt="{{ model.descripcion }}"
                     class="model-image">

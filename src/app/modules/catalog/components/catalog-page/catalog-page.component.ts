@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, map } from 'rxjs';
 import { ModelView } from 'src/app/core/models/pos.model';
 import { Product } from 'src/app/core/models/product.model';
 
@@ -21,8 +21,8 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
   allModels: ModelView[] = [];
   modelsToDisplay: ModelView[] = [];
   // Observable que contiene la lista de modelos agrupados
-  models$!: Observable<ModelView[]>; 
-  
+  todosModelos$: Observable<ModelView[]> = this.productService.availableModels$;
+  models$: Observable<ModelView[]> = this.todosModelos$;
   // Modelo seleccionado por el usuario
   selectedModel: ModelView | null = null;
   
@@ -41,16 +41,16 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
     // Suscripción al Observable de modelos agrupados
     // Se asume que productService.getGroupedModels() es accesible y funcional.
     // 👈 Llamar al nuevo método que agrupa los productos por modelo
-    this.modelsSubscription = this.productService.getGroupedModels().subscribe({
-      next: (models) => {
-        this.allModels = models;
-        this.modelsToDisplay = models; // Inicialmente muestra todos los modelos
-      },
-      error: (err) => {
-        console.error('Error al cargar y agrupar modelos:', err);
-        // Mostrar un mensaje de error o una alerta al usuario
-      }
-    });
+    // this.modelsSubscription = this.productService.getGroupedModels().subscribe({
+    //   next: (models) => {
+    //     this.allModels = models;
+    //     this.modelsToDisplay = models; // Inicialmente muestra todos los modelos
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al cargar y agrupar modelos:', err);
+    //     // Mostrar un mensaje de error o una alerta al usuario
+    //   }
+    // });
   }
 
   applyFilter(event: Event): void {
@@ -83,6 +83,30 @@ export class CatalogPageComponent implements OnInit, OnDestroy {
       
       return variantMatch;
     });
+  }
+  applyFilterAsyc(): void {
+    // const filterValue = (event.target as HTMLInputElement).value.toLowerCase().trim();
+    // this.currentFilterValue = filterValue;
+    console.log(this.currentFilterValue);
+    if (!this.currentFilterValue) {
+      this.models$ = this.todosModelos$;
+      return;
+    }
+    
+    
+    this.models$ = this.todosModelos$.pipe(
+      map(model => model.filter(variand => {
+        if(variand.descripcion.toLowerCase().includes(this.currentFilterValue)){
+          return true;
+        }else{
+          return false;
+        }
+      }))
+    );
+  }
+  resetAndApplyFilters():void{
+    this.currentFilterValue = '';
+    this.applyFilterAsyc();
   }
   /**
    * Navega a la vista de variantes del modelo seleccionado.

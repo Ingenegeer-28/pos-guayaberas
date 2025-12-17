@@ -24,16 +24,19 @@
         <div *ngIf="viewState === 'models'" class="filter-container">
             <mat-form-field appearance="outline" class="full-width-input">
                 <mat-label>Buscar Modelo, SKU o Color</mat-label>
-                <input matInput (keyup)="applyFilter($event)" placeholder="Escribe para buscar...">
+                <input matInput (keyup)="applyFilterAsyc()" [(ngModel)]="currentFilterValue"  placeholder="Escribe para buscar...">
                 <mat-icon matSuffix>search</mat-icon>
             </mat-form-field>
+            <button mat-icon-button (click)="resetAndApplyFilters()" matTooltip="Limpiar todos los filtros">
+                <mat-icon>clear</mat-icon>
+            </button>
         </div>
 
         <div *ngIf="viewState === 'models'" class="model-grid-container">
 
-            <h3 *ngIf="modelsToDisplay.length === 0 && allModels.length === 0">Cargando Modelos...</h3>
+            <h3 *ngIf="(todosModelos$ | async)!.length === 0 &&  (models$ | async)!.length === 0">Cargando Modelos...</h3>
 
-            <div *ngFor="let model of modelsToDisplay" class="model-box mat-elevation-z2" (click)="selectModel(model)">
+            <div *ngFor="let model of  (models$ | async)" class="model-box mat-elevation-z2" (click)="selectModel(model)">
 
                 <img [src]="model.products[0].foto != null ? 'assets/' + model.products[0].foto : 'assets/default-guaya-img.png'" alt="{{ model.descripcion }}"
                     class="model-image">
@@ -43,7 +46,7 @@
                 </div>
             </div>
 
-            <p *ngIf="modelsToDisplay.length === 0 && allModels.length > 0" class="no-variants">
+            <p *ngIf="(models$ | async)!.length === 0 && (todosModelos$ | async)!.length > 0" class="no-variants">
                 No se encontraron modelos que coincidan con el filtro: "**{{ currentFilterValue }}**"
             </p>
         </div>

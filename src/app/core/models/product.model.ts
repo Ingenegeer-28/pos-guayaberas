@@ -12,17 +12,20 @@
 
 
 export interface ProductCreationRequest {
+    id_producto: number | null;
+    id_modelo: number;
     nombre: string;
     descripcion: string;
-    
+    sku: string; //id_modelo-id_talla-id_manga-id_color
     precio: number;
     stock: number;
-    tipo_manga: string;
-    talla: string;
-    color: string;
-    estatus_producto: number;
-    departamento: string;
+    id_manga: string;
+    id_talla: number;
+    id_color: number;
+    estatus_producto: boolean;
+    id_departamento: string;
     tipo_producto: string;
+    foto: string;
     imagen: { imgT: string; imgValue: string }[];
     fechaCreacion: string;
     fechaActualizacion: string;

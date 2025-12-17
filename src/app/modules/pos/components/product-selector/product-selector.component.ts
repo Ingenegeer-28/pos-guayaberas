@@ -29,7 +29,8 @@ export class ProductSelectorComponent implements OnInit {
   allModels: ModelView[] = [];
   modelsToDisplay: ModelView[] = [];
   // Lista de modelos agrupados
-  models$!: Observable<ModelView[]>;
+  // models$!: Observable<ModelView[]>;
+  models$: Observable<ModelView[]> = this.productService.availableModels$;
 
   // Datos de referencia para los filtros (tallas, colores, etc.)
   references$!: Observable<ConfigDataResponse>;
@@ -67,18 +68,26 @@ export class ProductSelectorComponent implements OnInit {
     this.loadReferences();
     // Aquí cargarías y agruparías los productos del backend/JSON por modelo
     // this.models$ = this.productService.getGroupedModels(); // <-- ASUME que este método existe
-    this.modelsSubscription = this.productService.getGroupedModels().subscribe({
-      next: (models) => {
-        this.allModels = models;
-        this.modelsToDisplay = models; // Inicialmente muestra todos los modelos
-      },
-      error: (err) => {
-        console.error('Error al cargar y agrupar modelos:', err);
-        // Mostrar un mensaje de error o una alerta al usuario
-      },
-    });
+    // this.modelsSubscription = this.productService.getGroupedModels().subscribe({
+    //   next: (models) => {
+    //     this.allModels = models;
+    //     this.modelsToDisplay = models; // Inicialmente muestra todos los modelos
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al cargar y agrupar modelos:', err);
+    //     // Mostrar un mensaje de error o una alerta al usuario
+    //   },
+    // });
     // Inicializar el observable de productos filtrados (lógica avanzada)
     // this.setupFilteredProducts();
+    // this.models$.subscribe({
+    //   next:(model)=>{
+
+    //   },
+    //   error: (err)=> {
+
+    //   }
+    // })
   }
 
   // 1. Navegación: Seleccionar un modelo para ver sus productos

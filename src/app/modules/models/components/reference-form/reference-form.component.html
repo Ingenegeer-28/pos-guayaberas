@@ -29,7 +29,7 @@
                             <mat-option *ngFor="let d of modelos" [value]="d.id">{{ d.descripcion }}
                             </mat-option>
                         </mat-select>
-                        <mat-error *ngIf="modelForm.get('departamento')?.hasError('required')">Requerido</mat-error>
+                        <mat-error *ngIf="modelForm.get('nombre')?.hasError('required')">Requerido</mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="col-md-6">
@@ -143,7 +143,7 @@
                         <h4 matListItemTitle>{{ variant.descripcion }}</h4>
                         <p matListItemLine>Precio: {{ variant.precio | currency }} | Stock: {{ variant.stock
                             }} | Manga
-                            ID: {{ variant.tipo_manga }}</p>
+                            ID: {{ variant.id_manga }}</p>
                     </mat-list-item>
                 </mat-list>
 

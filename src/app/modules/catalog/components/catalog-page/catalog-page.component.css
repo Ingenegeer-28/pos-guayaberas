@@ -1,56 +1,70 @@
 /* product-list.component.css */
 
 .model-grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-    padding: 20px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
 }
 
 .model-box {
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-align: center;
-    background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: center;
+  background-color: #ffffff;
 }
 
 .model-box:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .model-image {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
 }
 
 .model-caption {
-    padding: 10px;
-    font-size: 0.9em;
+  padding: 10px;
+  font-size: 0.9em;
 }
 
 .variant-list-container {
-    padding: 10px 0;
+  padding: 10px 0;
 }
 
 /* Estilo para la lista de variantes */
 mat-list-item {
-    cursor: pointer;
-    transition: background-color 0.1s;
+  cursor: pointer;
+  transition: background-color 0.1s;
 }
 
 mat-list-item:hover {
-    background-color: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
 .filter-container {
-    padding: 5px 0 0px 0;
+  padding: 5px 0 0px 0;
 }
 
 .full-width-input {
+  width: 80%;
+}
+@media (max-width: 600px) {
+  .model-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+  }
+  .model-image {
     width: 100%;
+    height: 130px;
+    object-fit: cover;
+    display: block;
+  }
 }

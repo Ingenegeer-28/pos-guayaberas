@@ -1,15 +1,26 @@
 <div class="product-form-container">
     <h2>{{ pageTitle }}</h2>
-
+    <button mat-raised-button color="primary" (click)="validateExistIem()">
+        <mat-icon>add</mat-icon> validar
+    </button>
     <mat-card class="product-card">
         <mat-card-content>
             <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
 
                 <div class="row">
-                    <mat-form-field appearance="outline" class="col-6">
+                    <!-- <mat-form-field appearance="outline" class="col-6" *ngIf="selectedProduct">
                         <mat-label>Nombre de la Guayabera</mat-label>
                         <input matInput formControlName="nombre" required>
                         <mat-error *ngIf="f['nombre'].errors?.['required']">El nombre es obligatorio.</mat-error>
+                    </mat-form-field> -->
+
+                    <mat-form-field appearance="outline" class="col-6">
+                        <mat-label>Modelos</mat-label>
+                        <mat-select formControlName="nombre">
+                            <mat-option *ngFor="let d of modelos" [value]="d.id">{{ d.descripcion }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="productForm.get('nombre')?.hasError('required')">Requerido</mat-error>
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="col-6">
@@ -74,11 +85,25 @@
                         <span class="toggle-label">Producto Activo (Visible en POS)</span>
                     </mat-slide-toggle>
                 </div>
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*"
+                            style="display: none;">
+                        <button mat-flat-button color="accent" type="button" (click)="fileInput.click()">
+                            <mat-icon>image</mat-icon> Seleccionar Imagen Principal
+                        </button>
+                        <mat-hint *ngIf="selectedFileName">{{ selectedFileName }}</mat-hint>
+                        <mat-error
+                            *ngIf="productForm.get('imageFile')?.hasError('required') && productForm.get('imageFile')?.touched">Imagen
+                            requerida</mat-error>
+                    </div>
+                </div>
 
-                <mat-form-field appearance="outline" class="full-width-field">
+
+                <!-- <mat-form-field appearance="outline" class="full-width-field">
                     <mat-label>Descripción del Producto</mat-label>
                     <textarea matInput formControlName="description" rows="3"></textarea>
-                </mat-form-field>
+                </mat-form-field> -->
 
                 <mat-card-actions align="end" class="form-actions">
                     <button mat-button routerLink="/catalog">CANCELAR</button>

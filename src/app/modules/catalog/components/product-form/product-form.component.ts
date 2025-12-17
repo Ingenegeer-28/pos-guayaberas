@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ProductService } from 'src/app/core/services/product.service';
-import { Product } from 'src/app/core/models/product.model';
+import { Product, ProductCreationRequest } from 'src/app/core/models/product.model';
 import { Reference } from 'src/app/core/models/config.model';
 import { ModelConfigService } from 'src/app/core/services/model-config.service';
+import { ModelView } from 'src/app/core/models/pos.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-form',
@@ -19,12 +21,15 @@ export class ProductFormComponent implements OnInit {
   productId: number | null = null;
   pageTitle: string = 'Crear Nueva Guayabera';
 
+  models$: Observable<ModelView[]> = this.productService.availableModels$;
   departamentos: Reference[] = [];
   tallas: Reference[] = [];
   colores: Reference[] = [];
   modelos: Reference[] = [];
   mangas: Reference[] = [];
-
+  selectedProduct!: Product;
+  selectModel: string = '';
+  selectedFileName: string = '';
   // Opciones de Material y Talla predefinidas
   // sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   // colors = ['Blanco', 'Azul Cielo', 'Negro', 'Rojo', 'Gris', 'Verde Oliva'];
@@ -41,7 +46,6 @@ export class ProductFormComponent implements OnInit {
     // 1. Inicializar el formulario con valores por defecto y validadores
     this.loadReferences();
     this.initForm();
-
     // 2. Verificar si estamos en modo Edición
     this.route.paramMap
       .pipe(
@@ -62,12 +66,13 @@ export class ProductFormComponent implements OnInit {
       )
       .subscribe((product) => {
         if (product) {
+          this.selectedProduct = product;
           // this.productForm.patchValue(product); // Llenar el formulario con los datos del producto
           console.log(product);
           this.productForm = this.fb.group({
             id_producto: product.id_producto,
             sku: product.sku,
-            nombre: product.nombre,
+            nombre: product.id_modelo,
             description: product.descripcion,
             price: product.precio,
             size: product.id_talla,
@@ -90,14 +95,15 @@ export class ProductFormComponent implements OnInit {
       id_producto: [null], // Se usa solo en modo edición
       sku: ['', Validators.required],
       nombre: ['', Validators.required],
-      description: [''],
-      price: [0, [Validators.required, Validators.min(0.01)]],
+      // description: [''],
+      price: [0, [Validators.required, Validators.min(1)]],
       size: ['', Validators.required],
       color: ['', Validators.required],
       departamento: ['', Validators.required],
       manga: ['', Validators.required],
-      stock: [0, [Validators.required, Validators.min(0)]],
+      stock: [0, [Validators.required, Validators.min(1)]],
       isActive: [true],
+      imageFile: [null, Validators.required], // Almacena el nombre o path de la imagen
     });
   }
 
@@ -109,30 +115,95 @@ export class ProductFormComponent implements OnInit {
     }
 
     console.log(this.productForm.value);
-    const productData: Product = this.productForm.value;
-    console.log(productData);
+    const requestProd = this.createRequestProd(this.productForm);
+    const productData: ProductCreationRequest = this.productForm.value;
+    console.log(requestProd);
     if (this.isEditMode) {
       // Lógica de Actualización
       this.productService
-        .updateProduct(productData.id_producto, productData)
-        .subscribe(() => {
-          console.log('Producto actualizado:', productData.nombre);
-          // Mostrar notificación y navegar
-          this.router.navigate(['/catalog']);
+        .updateProduct(this.selectedProduct.id_producto, productData)
+        .subscribe({
+          next: (respuesta) => {
+            console.log('Producto actualizado:', productData.nombre);
+            // Mostrar notificación y navegar
+            this.productService.loadGroupedModelos();
+            this.router.navigate(['/catalog']);
+          },
+          error: (err: HttpErrorResponse) => {
+            console.log(err.message);
+          },
         });
     } else {
       // Lógica de Creación
-      this.productService.createProduct(productData).subscribe(() => {
-        console.log('Producto creado:', productData.nombre);
-        // Mostrar notificación y navegar
-        this.router.navigate(['/catalog']);
+      this.productService.createProduct(requestProd).subscribe({
+        next: (respuesta) => {
+          console.log('Producto creado:', requestProd.descripcion);
+          // Mostrar notificación y navegar
+          this.productService.loadGroupedModelos();
+          this.router.navigate(['/catalog']);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err.message);
+        },
       });
     }
   }
 
+  /**
+   * Maneja la selección de archivo de imagen.
+   */
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      // Guardar el nombre del archivo en el formulario
+      this.productForm.get('imageFile')?.setValue(file.name);
+      this.selectedFileName = file.name;
+      // Lógica para previsualización o subida a un servicio de archivos iría aquí
+    }
+  }
   // Getter para facilitar el acceso a los controles del formulario en el HTML
   get f() {
     return this.productForm.controls;
+  }
+
+  createRequestProd(productoForm: FormGroup): ProductCreationRequest {
+    const formValue = productoForm.value;
+    const getDesc = (list: any[], id: string) => list.find((item) => item.id === id)?.descripcion || id;
+    const tallaDesc = getDesc(this.tallas, formValue.size);
+    const mangaDesc = getDesc(this.mangas, formValue.manga);
+    const colorDesc = getDesc(this.colores, formValue.color);
+    const modeloDesc = getDesc(this.modelos, formValue.nombre);
+
+    const produ: ProductCreationRequest = {
+      id_producto: formValue.id_producto,
+      id_modelo: formValue.nombre,
+      nombre: modeloDesc,
+      descripcion: `${modeloDesc} talla ${tallaDesc} ${mangaDesc} color ${colorDesc}`,
+      sku: `${formValue.nombre}-${formValue.size}-${formValue.manga}-${formValue.color}`,
+      precio: formValue.price,
+      stock: formValue.stock,
+      id_manga: formValue.manga,
+      id_talla: formValue.size,
+      id_color: formValue.color,
+      estatus_producto: formValue.isActive,
+      id_departamento: formValue.departamento,
+      tipo_producto: 'prenda',
+      foto: '',
+      imagen: [],
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      insertar: [],
+    };
+    return produ;
+  }
+  validateExistIem(): void {
+    const formValue = this.productForm.value;
+    console.log(formValue.nombre);
+    const allModels = this.productService.getAllModelsSync();
+    const mmmmmm = allModels.find((modl) => modl.id_modelo == formValue.nombre);
+    if (mmmmmm) {
+      console.log(mmmmmm.products);
+    }
   }
   loadReferences(): void {
     this.configService.getModelos().subscribe((data) => {

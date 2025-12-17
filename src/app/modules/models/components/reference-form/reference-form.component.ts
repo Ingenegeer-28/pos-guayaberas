@@ -134,23 +134,27 @@ export class ReferenceFormComponent implements OnInit {
                   const mangaDesc = getDesc(this.mangas, mangaId);
                   
                   const newProduct: ProductCreationRequest = {
-                      nombre: formValue.nombre,
-                      descripcion: `${formValue.nombre} talla ${tallaDesc} manga ${mangaDesc} color ${colorDesc}`,
-                      precio: formValue.precioBase,
-                      stock: formValue.stockInicial,
-                      tipo_manga: mangaId,
-                      talla: tallaId,
-                      color: colorId,
-                      estatus_producto: formValue.estatus,
-                      departamento: formValue.departamento,
-                      tipo_producto: formValue.tipo_producto,
-                      imagen: [
-                          // Se asume que imageFile contiene el nombre del archivo
-                          { imgT: 'img1', imgValue: formValue.imageFile }, 
-                      ],
-                      fechaCreacion: new Date().toISOString().split('T')[0],
-                      fechaActualizacion: new Date().toISOString(),
-                      insertar: []
+                    nombre: formValue.nombre,
+                    descripcion: `${formValue.nombre} talla ${tallaDesc} manga ${mangaDesc} color ${colorDesc}`,
+                    precio: formValue.precioBase,
+                    stock: formValue.stockInicial,
+                    id_manga: mangaId,
+                    id_talla: tallaId,
+                    id_color: colorId,
+                    estatus_producto: formValue.estatus,
+                    id_departamento: formValue.departamento,
+                    tipo_producto: formValue.tipo_producto,
+                    imagen: [
+                      // Se asume que imageFile contiene el nombre del archivo
+                      { imgT: 'img1', imgValue: formValue.imageFile },
+                    ],
+                    fechaCreacion: new Date().toISOString().split('T')[0],
+                    fechaActualizacion: new Date().toISOString(),
+                    insertar: [],
+                    id_producto: null,
+                    id_modelo: Number(this.selectedModel?.id) || formValue.nombre,
+                    sku: `${formValue.nombre} talla ${tallaDesc} manga ${mangaDesc} color ${colorDesc}`,
+                    foto: formValue.imageFile
                   };
                   variants.push(newProduct);
                   variantCounter++;

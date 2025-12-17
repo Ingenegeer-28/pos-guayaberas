@@ -138,20 +138,20 @@ export class ModelConfigService {
   //   );
   // }
 
-  getProducts(): Observable<Product[]> {
-    return this.allConfigData$.pipe(
-      map(data => {
-        console.log(data);
-        // Realizar la desduplicación de modelos por descripción
-        const uniqueModels = data.productos.filter((m, index, self) => 
-          index === self.findIndex((t) => (
-            t.descripcion === m.descripcion
-          ))
-        );
-        return uniqueModels;
-      })
-    );
-  }
+  // getProducts(): Observable<Product[]> {
+  //   return this.allConfigData$.pipe(
+  //     map(data => {
+  //       console.log(data);
+  //       // Realizar la desduplicación de modelos por descripción
+  //       const uniqueModels = data.productos.filter((m, index, self) => 
+  //         index === self.findIndex((t) => (
+  //           t.descripcion === m.descripcion
+  //         ))
+  //       );
+  //       return uniqueModels;
+  //     })
+  //   );
+  // }
   
   // Lógica para crear un nuevo modelo (simulación)
   createModel(description: string): Observable<Model> {

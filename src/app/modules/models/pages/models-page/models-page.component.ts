@@ -60,7 +60,6 @@ export class ModelsPageComponent implements OnInit, OnDestroy {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      console.log(data);
       this.modelos = data;
     });
   }
