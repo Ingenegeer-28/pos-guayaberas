@@ -35,7 +35,8 @@
                                     <mat-icon>remove</mat-icon>
                                 </button>
                                 <span class="current-quantity">{{ item.quantity }}</span>
-                                <button (click)="updateQuantity(item.product.id_producto, item.quantity + 1)" [disabled]="item.product.cantidad == item.quantity">
+                                <button (click)="updateQuantity(item.product.id_producto, item.quantity + 1)"
+                                    [disabled]="item.product.cantidad == 0">
                                     <mat-icon>add</mat-icon>
                                 </button>
                             </div>
@@ -51,7 +52,8 @@
                         [class.example-element-detail-wrapper-expanded]="isExpanded(item)">
                         <div class="example-element-detail">
                             <mat-form-field appearance="fill" class="discount-input">
-                                <input matInput type="number" min="0" placeholder="0.00" [ngModel]="item.itemDiscount || 0"
+                                <input matInput type="number" min="0" placeholder="0.00"
+                                    [ngModel]="item.itemDiscount || 0"
                                     (ngModelChange)="applyItemDiscount(item.product.id_producto, $event)">
                             </mat-form-field>
                         </div>
@@ -71,7 +73,7 @@
                     <div class="example-element-detail-wrapper"
                         [class.example-element-detail-wrapper-expanded]="isExpanded(item)">
                         <div class="example-element-detail">
-                            <button mat-icon-button color="warn" (click)="removeItem(item.product.id_producto)"
+                            <button mat-icon-button color="warn" (click)="removeItem(item.product.id_producto, item)"
                                 matTooltip="Eliminar Producto">
                                 <mat-icon>close</mat-icon>
                             </button>
@@ -113,7 +115,8 @@
             <tr mat-row *matRowDef="let item; columns: columnsToDisplayWithExpandT;" class="example-element-row"
                 [class.example-expanded-row]="isExpanded(item)" (click)="toggle(item)">
             </tr>
-            <tr mat-row *matRowDef="let row; columns: ['quantity', 'itemDiscount', 'actions']" class="example-detail-row"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['quantity', 'itemDiscount', 'actions']"
+                class="example-detail-row"></tr>
         </table>
         <!-- <mat-table [dataSource]="(cartSummary$ | async)?.items ?? []" multiTemplateDataRows class="full-width-table">
 
@@ -231,16 +234,37 @@
                 <span class="value">{{ totals.tax | currency }}</span>
             </div>
 
-            <mat-divider></mat-divider>
+            <div class="payment-method-section">
+                <mat-label><strong>Método de Pago:</strong></mat-label>
+
+                <mat-button-toggle-group [(ngModel)]="metodoPago" aria-label="Método de Pago" class="full-width-toggle">
+                    <mat-button-toggle value="efectivo">
+                        <mat-icon>payments</mat-icon> Efectivo
+                    </mat-button-toggle>
+                    <mat-button-toggle value="tarjeta">
+                        <mat-icon>credit_card</mat-icon> Tarjeta
+                    </mat-button-toggle>
+                    <mat-button-toggle value="transferencia">
+                        <mat-icon>account_balance</mat-icon> Transf.
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+
+            <mat-divider style="margin: 15px 0;"></mat-divider>
 
             <div class="total-row final-total">
                 <h3>TOTAL A PAGAR:</h3>
                 <h3 class="value">{{ totals.finalTotal | currency }}</h3>
             </div>
 
-            <button mat-raised-button color="primary" class="checkout-button" [disabled]="totals.items.length === 0"
-                (click)="checkout()">
-                <mat-icon>check_circle</mat-icon> Procesar Venta
+            <button mat-raised-button color="primary" class="checkout-button"
+                [disabled]="totals.items.length === 0 || isProcessing" (click)="checkout()">
+
+                <mat-icon *ngIf="!isProcessing">check_circle</mat-icon>
+                <mat-spinner diameter="20" *ngIf="isProcessing"
+                    style="display: inline-block; margin-right: 8px;"></mat-spinner>
+
+                <span>{{ isProcessing ? 'Procesando...' : 'Finalizar Venta (' + metodoPago + ')' }}</span>
             </button>
         </div>
     </mat-card-footer>

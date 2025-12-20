@@ -11,7 +11,17 @@
                         <mat-error *ngIf="f['nombre'].errors?.['required']">El nombre es obligatorio.</mat-error>
                     </mat-form-field> -->
 
-                    <mat-form-field appearance="outline" class="col-6">
+
+
+                    <!-- <mat-form-field appearance="outline" class="col-6">
+                        <mat-label>SKU (Código del Producto)</mat-label>
+                        <input matInput formControlName="sku" required>
+                        <mat-error *ngIf="f['sku'].errors?.['required']">El SKU es obligatorio.</mat-error>
+                    </mat-form-field> -->
+                </div>
+
+                <div class="row">
+                    <mat-form-field appearance="outline" class="col-4">
                         <mat-label>Modelos</mat-label>
                         <mat-select formControlName="nombre">
                             <mat-option *ngFor="let d of modelos" [value]="d.id">{{ d.descripcion }}
@@ -20,31 +30,7 @@
                         <mat-error *ngIf="productForm.get('nombre')?.hasError('required')">Requerido</mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="col-6">
-                        <mat-label>SKU (Código del Producto)</mat-label>
-                        <input matInput formControlName="sku" required>
-                        <mat-error *ngIf="f['sku'].errors?.['required']">El SKU es obligatorio.</mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div class="row">
-                    <mat-form-field appearance="outline" class="col-4">
-                        <mat-label>Precio ($)</mat-label>
-                        <input matInput type="number" formControlName="price" required min="0.01">
-                        <mat-icon matPrefix>attach_money</mat-icon>
-                        <mat-error *ngIf="f['price'].errors?.['min']">Debe ser mayor a $0.00.</mat-error>
-                        <mat-error *ngIf="f['price'].errors?.['required']">El precio es obligatorio.</mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline" class="col-4">
-                        <mat-label>Talla</mat-label>
-                        <mat-select formControlName="size" required>
-                            <mat-option *ngFor="let t of tallas" [value]="t.id">{{t.descripcion}}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="f['size'].errors?.['required']">La talla es obligatoria.</mat-error>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline" class="col-4">
+                    <mat-form-field appearance="outline" class="col-2">
                         <mat-label>Color</mat-label>
                         <mat-select formControlName="color" required>
                             <mat-option *ngFor="let c of colores" [value]="c.id">{{ c.descripcion }}</mat-option>
@@ -52,7 +38,15 @@
                         <mat-error *ngIf="f['color'].errors?.['required']">El color es obligatorio.</mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="col-4">
+                    <mat-form-field appearance="outline" class="col-2">
+                        <mat-label>Talla</mat-label>
+                        <mat-select formControlName="size" required>
+                            <mat-option *ngFor="let t of tallas" [value]="t.id">{{t.descripcion}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="f['size'].errors?.['required']">La talla es obligatoria.</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="col-2">
                         <mat-label>Manga</mat-label>
                         <mat-select formControlName="manga" required>
                             <mat-option *ngFor="let m of mangas" [value]="m.id">{{ m.descripcion }}</mat-option>
@@ -60,16 +54,24 @@
                         <mat-error *ngIf="f['manga'].errors?.['required']">El color es obligatorio.</mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="col-4">
+                    <mat-form-field appearance="outline" class="col-2">
                         <mat-label>Departamento</mat-label>
                         <mat-select formControlName="departamento" required>
                             <mat-option *ngFor="let d of departamentos" [value]="d.id">{{ d.descripcion }}</mat-option>
                         </mat-select>
                         <mat-error *ngIf="f['departamento'].errors?.['required']">El color es obligatorio.</mat-error>
                     </mat-form-field>
+
                 </div>
 
                 <div class="row align-center">
+                    <mat-form-field appearance="outline" class="col-2">
+                        <mat-label>Precio ($)</mat-label>
+                        <input matInput type="number" formControlName="price" required min="0.01">
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <mat-error *ngIf="f['price'].errors?.['min']">Debe ser mayor a $0.00.</mat-error>
+                        <mat-error *ngIf="f['price'].errors?.['required']">El precio es obligatorio.</mat-error>
+                    </mat-form-field>
                     <mat-form-field appearance="outline" class="col-4">
                         <mat-label>Inventario (Stock)</mat-label>
                         <input matInput type="number" formControlName="stock" required min="0">

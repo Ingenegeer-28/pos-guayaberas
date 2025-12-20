@@ -15,6 +15,7 @@
 }
 
 /* Estilos de Columna (para simular el Grid) */
+.col-2,
 .col-4,
 .col-6,
 .col-8 {
@@ -51,6 +52,7 @@
 
 /* Responsividad para móviles (menos de 600px) */
 @media (max-width: 600px) {
+  .col-2,
   .col-4,
   .col-6,
   .col-8 {

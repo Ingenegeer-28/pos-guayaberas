@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../models/product.model'; // Asume esta ruta
 import { CartItem, CartSummary } from '../models/cart.model'; // Asume esta ruta
+import { ProductService } from './product.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +31,11 @@ export class CartService {
   private cartSubject = new BehaviorSubject<CartSummary>(this.initialSummary);
   
   // Observable público para que los componentes se suscriban
-  cart$: Observable<CartSummary> = this.cartSubject.asObservable(); 
+  public cart$: Observable<CartSummary> = this.cartSubject.asObservable(); 
 
-  constructor() { }
+  constructor(
+    private productService: ProductService,
+  ) { }
 
   // --- MÉTODOS DE ACCIÓN ---
 
@@ -46,6 +49,7 @@ export class CartService {
     if (itemIndex > -1) {
       // 1. Si existe, actualizar la cantidad
       const existingItem = items[itemIndex];
+      this.productService.addItem(product, existingItem);
       existingItem.quantity += quantity;
       items[itemIndex] = existingItem;
     } else {
@@ -57,6 +61,7 @@ export class CartService {
         subtotal: 0, // Se recalculará después
         itemNetTotal: 0 // Se recalculará después
       } as CartItem; 
+      this.productService.addItem(product, newItem);
       items.push(newItem);
     }
     
@@ -75,7 +80,9 @@ export class CartService {
 
     if (itemIndex > -1) {
       const item = items[itemIndex];
+      const cantidad =  item.quantity - newQuantity;
       item.quantity = newQuantity;
+      this.productService.updateQuantity(item.product, cantidad);
       this.recalculateCart(items);
     }
   }
@@ -117,11 +124,26 @@ export class CartService {
     this.clearCart();
     return finalSummary;
   }
-  
+  public getAllItemsSync(): CartItem[] {
+      return this.cartSubject.value.items;
+    }
+  /**
+   * Restablece el carrito a su estado inicial.
+   */
   clearCart(): void {
-    this.cartSubject.next(this.initialSummary);
     this.currentShippingCost = 0;
     this.currentTotalDiscount = 0;
+    // Emitir el resumen inicial vacío
+    this.cartSubject.next({
+      items: [],
+      totalItems: 0,
+      rawSubtotal: 0,
+      netSubtotal: 0,
+      tax: 0,
+      totalDiscount: 0,
+      shippingCost: 0,
+      finalTotal: 0
+    });
   }
   
   // --- MÉTODOS PRIVADOS ---

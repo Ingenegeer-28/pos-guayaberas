@@ -4,6 +4,7 @@ import { Product, ProductListResponse } from '../models/product.model';
 import { ModelView, ProductVariant } from '../models/pos.model';
 import { ModelConfigService } from './model-config.service';
 import { HttpClient } from '@angular/common/http';
+import { CartItem } from '../models/cart.model';
 // import { Product } from '../models/product.model';
 
 @Injectable({
@@ -90,6 +91,22 @@ export class ProductService {
   }
   public getAllModelsSync(): ModelView[] {
     return this.modelsSubject.value;
+  }
+
+  addItem(product: Product, productCart: CartItem):void{
+    product.cantidad = product.cantidad - 1;
+  }
+  updateQuantity(product: Product, cantidd: number):void{
+    product.cantidad = product.cantidad + cantidd;
+  }
+
+  deleteItem(item: CartItem): void {
+    item.product.cantidad = item.product.cantidad + item.quantity;
+  }
+  restartModels(items: CartItem[]):void{
+    items.forEach(item => {
+      item.product.cantidad = item.product.cantidad + item.quantity;
+    });
   }
   /**
    * Obtiene todos los productos de la API y los agrupa por Modelo para la vista de catálogo.

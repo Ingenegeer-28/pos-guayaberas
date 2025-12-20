@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  Observable,
-  BehaviorSubject,
-  combineLatest,
-  map,
-  startWith,
-  Subscription,
-} from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, map, startWith, Subscription } from 'rxjs';
+import { CartSummary } from 'src/app/core/models/cart.model';
 import { ConfigDataResponse, Reference } from 'src/app/core/models/config.model';
 import { ModelView, ProductVariant } from 'src/app/core/models/pos.model';
 import { Product } from 'src/app/core/models/product.model';
@@ -30,8 +24,10 @@ export class ProductSelectorComponent implements OnInit {
   modelsToDisplay: ModelView[] = [];
   // Lista de modelos agrupados
   // models$!: Observable<ModelView[]>;
-  models$: Observable<ModelView[]> = this.productService.availableModels$;
+  todosModelos$: Observable<ModelView[]> = this.productService.availableModels$;
+  models$: Observable<ModelView[]> = this.todosModelos$;
 
+  cart$: Observable<CartSummary> = this.cartService.cart$
   // Datos de referencia para los filtros (tallas, colores, etc.)
   references$!: Observable<ConfigDataResponse>;
 
@@ -204,6 +200,7 @@ export class ProductSelectorComponent implements OnInit {
     if (product.cantidad > 0) {
       // Convertir ProductVariant a Product (o similar) que CartService espera
       this.cartService.addItem(product);
+      // this.updateQuantity(product);
       // this.cartService.addItem(this.convertToProduct(product));
     } else {
       console.warn(`Stock bajo para ${product.nombre}`);
@@ -211,6 +208,59 @@ export class ProductSelectorComponent implements OnInit {
     }
   }
 
+  updateQuantity(producto: Product):void{
+    // this.productsToDisplay.forEach(product=> {
+    //   if (product.id_producto == producto.id_producto) {
+    //     product.cantidad = product.cantidad -1;
+    //   } 
+    // })
+    // this.models$.subscribe({
+    //   next:(modelos =>{
+    //     modelos.forEach(model=> {
+    //       model.products.forEach(product =>{
+    //         if (product.id_producto == producto.id_producto) {
+    //           console.log(product.cantidad);
+    //         }
+    //       })
+          
+    //     })
+    //   })
+    // })
+    // const prd = producto.cantidad;
+    // this.cart$.subscribe({
+    //   next:(respues =>{
+    //     respues.items.forEach(item=> {
+    //       if (item.product.id_producto == producto.id_producto) {
+    //         console.log(item.product.cantidad);
+    //         console.log(item.quantity);
+            
+    //       }
+    //     })
+    //   })
+    // })
+
+    // this.models$ = this.todosModelos$.pipe(
+    //   map(model => model.filter(variand => {
+    //     if(variand.descripcion.toLowerCase().includes(this.currentFilterValue)){
+    //       return true;
+    //     }else{
+    //       return false;
+    //     }
+    //   }))
+    // );
+    // const allModels = this.productService.getAllModelsSync();
+    // const model = allModels.find((modl) => modl.products.find((prod) => prod.id_producto == producto.id_producto));
+    // // const model = allModels.filter((model) => model.products.find((prod)=> prod.id_producto == producto.id_producto))
+    // model?.products.forEach(prod=>{
+    //   if (prod.id_producto == producto.id_producto) {
+    //     console.log(prod.cantidad);
+    //   }
+      
+    // })
+    // console.log(model);
+    // producto.cantidad = producto.cantidad-1;
+    
+  }
   // private convertToProduct(variant: ProductVariant): Product {
   //     return {
   //         id: parseInt(variant.id_producto),
@@ -224,6 +274,9 @@ export class ProductSelectorComponent implements OnInit {
   //     } as Product;
   // }
 
+  reloadModels():void{
+    this.productService.loadGroupedModelos();
+  }
   loadReferences(): void {
     this.configService.getModelos().subscribe((data) => {
       this.modelos = data;

@@ -30,6 +30,7 @@ export class ProductFormComponent implements OnInit {
   selectedProduct!: Product;
   selectModel: string = '';
   selectedFileName: string = '';
+  editProductForm!: FormGroup;
   // Opciones de Material y Talla predefinidas
   // sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   // colors = ['Blanco', 'Azul Cielo', 'Negro', 'Rojo', 'Gris', 'Verde Oliva'];
@@ -68,10 +69,9 @@ export class ProductFormComponent implements OnInit {
         if (product) {
           this.selectedProduct = product;
           // this.productForm.patchValue(product); // Llenar el formulario con los datos del producto
-          console.log(product);
           this.productForm = this.fb.group({
             id_producto: product.id_producto,
-            sku: product.sku,
+            // sku: product.sku,
             nombre: product.id_modelo,
             description: product.descripcion,
             price: product.precio,
@@ -82,6 +82,8 @@ export class ProductFormComponent implements OnInit {
             stock: product.cantidad,
             isActive: product.estatus_producto == '1' ? true : false,
           });
+          this.selectedFileName = product.foto;
+          this.editProductForm = this.productForm.value;
         } else if (this.isEditMode) {
           // Manejar el caso de que el ID no exista (ej. redirigir a 404)
           console.error('Producto no encontrado. Redirigiendo.');
@@ -93,7 +95,7 @@ export class ProductFormComponent implements OnInit {
   initForm(): void {
     this.productForm = this.fb.group({
       id_producto: [null], // Se usa solo en modo edición
-      sku: ['', Validators.required],
+      // sku: ['', Validators.required],
       nombre: ['', Validators.required],
       // description: [''],
       price: [0, [Validators.required, Validators.min(1)]],
@@ -103,7 +105,7 @@ export class ProductFormComponent implements OnInit {
       manga: ['', Validators.required],
       stock: [0, [Validators.required, Validators.min(1)]],
       isActive: [true],
-      imageFile: [null, Validators.required], // Almacena el nombre o path de la imagen
+      imageFile: [null], // Almacena el nombre o path de la imagen
     });
   }
 
@@ -114,7 +116,6 @@ export class ProductFormComponent implements OnInit {
       return;
     }
     const requestProd = this.createRequestProd(this.productForm);
-    console.log(requestProd);
     if (this.validateExistIem(requestProd)) {
       console.log('🛑 producto existente con los valores insertados, verifique');
       return;
@@ -131,7 +132,7 @@ export class ProductFormComponent implements OnInit {
             this.router.navigate(['/catalog']);
           },
           error: (err: HttpErrorResponse) => {
-            console.log(err.message);
+            console.log(err);
           },
         });
     } else {
@@ -189,7 +190,7 @@ export class ProductFormComponent implements OnInit {
       estatus_producto: formValue.isActive,
       id_departamento: formValue.departamento,
       tipo_producto: 'prenda',
-      foto: '',
+      foto: this.selectedFileName,
       imagen: [],
       fechaCreacion: '',
       fechaActualizacion: '',
@@ -203,10 +204,14 @@ export class ProductFormComponent implements OnInit {
     var existe = false;
     if (model) {
       const produto = model.products.find((prd) =>
-        prd.id_modelo == request.id_modelo && prd.id_manga == request.id_manga && prd.id_talla == request.id_talla && prd.id_departamento == request.id_departamento && prd.id_color == request.id_color
+        prd.sku == request.sku || prd.id_producto == request.id_producto
       );
       if (produto != undefined) {
         existe = true;
+        if(this.isEditMode){
+          existe = (produto.cantidad != request.stock || Number(produto.precio) != request.precio || Boolean(produto.estatus_producto) != request.estatus_producto || request.foto != this.selectedFileName) ? false : true;
+        }
+        
       }
     }
     return existe;
