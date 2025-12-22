@@ -7,6 +7,7 @@ import { PosPageComponent } from './pages/pos-page/pos-page.component';
 import { ProductSelectorComponent } from './components/product-selector/product-selector.component';
 import { CartDetailComponent } from './components/cart-detail/cart-detail.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { SaleConfirmationDialogComponent } from './components/sale-confirmation-dialog/sale-confirmation-dialog.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     PosComponent,
     PosPageComponent,
     ProductSelectorComponent,
-    CartDetailComponent
+    CartDetailComponent,
+    SaleConfirmationDialogComponent
   ],
   imports: [
     CommonModule,

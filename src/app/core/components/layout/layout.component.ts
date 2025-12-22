@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-layout',
@@ -13,8 +14,9 @@ import { AuthService } from '../../services/auth.service';
 export class LayoutComponent implements OnInit {
   pageTitle: string = 'Bienvenido a GuayaPos';
   userName: string | null; // Nuevo: Para mostrar el nombre en el toolbar
-
+  openSideNav = true;
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     public authService: AuthService // 🚨 MODIFICACIÓN CLAVE: hacerlo público
@@ -27,6 +29,10 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     // Suscripción para obtener el título de la página de la data de la ruta
+    this.breakpointObserver.observe([Breakpoints.Handset])
+      .subscribe(result => {
+        this.openSideNav = !result.matches;
+      });
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),

@@ -44,6 +44,8 @@ const routes: Routes = [
         loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
         data: { title: 'Configuración de usuarios' } // Añadir título
       },
+      { path: 'sales', 
+        loadChildren: () => import('./modules/sales/sales.module').then(m => m.SalesModule) },
       // Redirigir el path vacío a la ruta POS por defecto
       { path: '', redirectTo: 'pos', pathMatch: 'full' },
     ],

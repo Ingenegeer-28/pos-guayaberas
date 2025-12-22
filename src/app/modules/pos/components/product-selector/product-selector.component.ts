@@ -208,59 +208,6 @@ export class ProductSelectorComponent implements OnInit {
     }
   }
 
-  updateQuantity(producto: Product):void{
-    // this.productsToDisplay.forEach(product=> {
-    //   if (product.id_producto == producto.id_producto) {
-    //     product.cantidad = product.cantidad -1;
-    //   } 
-    // })
-    // this.models$.subscribe({
-    //   next:(modelos =>{
-    //     modelos.forEach(model=> {
-    //       model.products.forEach(product =>{
-    //         if (product.id_producto == producto.id_producto) {
-    //           console.log(product.cantidad);
-    //         }
-    //       })
-          
-    //     })
-    //   })
-    // })
-    // const prd = producto.cantidad;
-    // this.cart$.subscribe({
-    //   next:(respues =>{
-    //     respues.items.forEach(item=> {
-    //       if (item.product.id_producto == producto.id_producto) {
-    //         console.log(item.product.cantidad);
-    //         console.log(item.quantity);
-            
-    //       }
-    //     })
-    //   })
-    // })
-
-    // this.models$ = this.todosModelos$.pipe(
-    //   map(model => model.filter(variand => {
-    //     if(variand.descripcion.toLowerCase().includes(this.currentFilterValue)){
-    //       return true;
-    //     }else{
-    //       return false;
-    //     }
-    //   }))
-    // );
-    // const allModels = this.productService.getAllModelsSync();
-    // const model = allModels.find((modl) => modl.products.find((prod) => prod.id_producto == producto.id_producto));
-    // // const model = allModels.filter((model) => model.products.find((prod)=> prod.id_producto == producto.id_producto))
-    // model?.products.forEach(prod=>{
-    //   if (prod.id_producto == producto.id_producto) {
-    //     console.log(prod.cantidad);
-    //   }
-      
-    // })
-    // console.log(model);
-    // producto.cantidad = producto.cantidad-1;
-    
-  }
   // private convertToProduct(variant: ProductVariant): Product {
   //     return {
   //         id: parseInt(variant.id_producto),
@@ -273,8 +220,11 @@ export class ProductSelectorComponent implements OnInit {
   //         // Añadir otras propiedades necesarias para el carrito
   //     } as Product;
   // }
-
-  reloadModels():void{
+  finishTrx():void{
+    // this.goBackToModels();
+    console.log('clear models');
+  }
+  public reloadModels():void{
     this.productService.loadGroupedModelos();
   }
   loadReferences(): void {

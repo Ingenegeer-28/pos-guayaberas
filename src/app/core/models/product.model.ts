@@ -47,7 +47,7 @@ export interface Product {
     departamento_descripcion: string;
     foto: string;
     cantidad: number; // Stock (lo convertiremos a número en JS)
-    precio: string; // Mantener como string, ya que el JSON lo define así
+    precio: number; // Mantener como string, ya que el JSON lo define así
     id_talla: number;
     talla_descripcion: string;
     id_manga: number;

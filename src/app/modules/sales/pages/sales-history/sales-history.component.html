@@ -1,0 +1,167 @@
+<mat-card class="chart-card">
+    <mat-card-header>
+        <mat-card-title>Rendimiento de Ventas</mat-card-title>
+        <mat-card-subtitle>Tendencia de ingresos según los filtros aplicados</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="chart-container">
+            <canvas #salesChart></canvas>
+        </div>
+    </mat-card-content>
+</mat-card>
+<div class="widgets-grid">
+    <mat-card class="widget-card">
+        <mat-card-content>
+            <div class="widget-icon blue">
+                <mat-icon>analytics</mat-icon>
+            </div>
+            <div class="widget-data">
+                <div class="label">Ticket Promedio</div>
+                <div class="value">{{ stats.promedio | currency }}</div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="widget-card">
+        <mat-card-content>
+            <div class="widget-icon green">
+                <mat-icon>trending_up</mat-icon>
+            </div>
+            <div class="widget-data">
+                <div class="label">Venta Más Alta</div>
+                <div class="value">{{ stats.maxima | currency }}</div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="widget-card">
+        <mat-card-content>
+            <div class="widget-icon purple">
+                <mat-icon>shopping_bag</mat-icon>
+            </div>
+            <div class="widget-data">
+                <div class="label">Total de Ventas</div>
+                <div class="value">{{ stats.total }}</div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+<mat-card class="history-card">
+    <mat-card-header>
+        <mat-card-title>Historial de Ventas</mat-card-title>
+        <span class="spacer"></span>
+        <button mat-flat-button color="accent" [matMenuTriggerFor]="exportMenu"
+            [disabled]="dataSource.data.length === 0">
+            <mat-icon>download</mat-icon> EXPORTAR
+        </button>
+        <mat-menu #exportMenu="matMenu">
+            <button mat-menu-item (click)="exportExcel()">
+                <mat-icon>table_view</mat-icon>
+                <span>Descargar Excel</span>
+            </button>
+            <button mat-menu-item (click)="exportPdf()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>Descargar PDF</span>
+            </button>
+        </mat-menu>
+        <button mat-stroked-button color="primary" (click)="filterToday()">
+            <mat-icon>today</mat-icon> VENTAS DE HOY
+        </button>
+    </mat-card-header>
+
+    <div class="filter-bar">
+        <mat-form-field appearance="outline">
+            <mat-label>Buscar Folio</mat-label>
+            <input matInput [(ngModel)]="filterFolio" (keyup.enter)="loadSales()" placeholder="Ej: 125">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate [(ngModel)]="startDate" placeholder="Inicio">
+                <input matEndDate [(ngModel)]="endDate" placeholder="Fin" (dateChange)="loadSales()">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+
+        <button mat-icon-button color="warn" (click)="clearFilters()" matTooltip="Limpiar filtros">
+            <mat-icon>filter_alt_off</mat-icon>
+        </button>
+    </div>
+    <mat-card-content>
+        <div class="table-container">
+            <table mat-table [dataSource]="dataSource" class="full-width-table">
+
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> Folio </th>
+                    <td mat-cell *matCellDef="let sale"> #{{sale.id_venta}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+                <ng-container matColumnDef="fecha">
+                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                    <td mat-cell *matCellDef="let sale"> {{sale.fecha_venta | date:'short'}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <ng-container matColumnDef="vendedor">
+                    <th mat-header-cell *matHeaderCellDef> Vendedor </th>
+                    <td mat-cell *matCellDef="let sale"> {{sale.vendedor}} </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <ng-container matColumnDef="metodo">
+                    <th mat-header-cell *matHeaderCellDef> Pago </th>
+                    <td mat-cell *matCellDef="let sale"> {{sale.metodo_pago | uppercase}} </td>
+                    <td mat-footer-cell *matFooterCellDef> <strong>TOTAL FILTRADO</strong></td>
+                </ng-container>
+
+                <ng-container matColumnDef="total">
+                    <th mat-header-cell *matHeaderCellDef> Total </th>
+                    <td mat-cell *matCellDef="let sale"> {{sale.total_final | currency}} </td>
+                    <td mat-footer-cell *matFooterCellDef>
+                        <strong class="total-highlight">{{ getTotalVendido() | currency }}</strong>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <ng-container matColumnDef="estatus">
+                    <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                    <td mat-cell *matCellDef="let sale" style="text-align: center;">
+                        <mat-icon [matTooltip]="sale.estatus_venta === 'cancelada' ? 'cancelada' : 'completada'"
+                            [class.estatus-cancel]="sale.estatus_venta === 'cancelada'"
+                            class="estatus-colum">check_circle</mat-icon>
+                        <!-- <span [class.chip-cancelada]="sale.estatus_venta === 'cancelada'">
+                            {{sale.estatus_venta}}
+                        </span> -->
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                    <td mat-cell *matCellDef="let sale">
+                        <button mat-icon-button color="accent" (click)="viewDetail(sale)" matTooltip="Ver detalle">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" (click)="reprintTicket(sale)" matTooltip="Reimprimir">
+                            <mat-icon>print</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="cancelSale(sale.id_venta)"
+                            *ngIf="sale.estatus_venta !== 'cancelada'" matTooltip="Cancelar">
+                            <mat-icon>block</mat-icon>
+                        </button>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-footer-row *matFooterRowDef="displayedColumns" class="footer-summary-row"></tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
+            aria-label="Seleccionar página"></mat-paginator>
+    </mat-card-content>
+</mat-card>

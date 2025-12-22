@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, take } from 'rxjs';
 import { CartItem, CartSummary } from 'src/app/core/models/cart.model';
 import { Product } from 'src/app/core/models/product.model';
 import { SaleRequest } from 'src/app/core/models/sale.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CartService } from 'src/app/core/services/cart.service';
+import { PrintService } from 'src/app/core/services/print.service';
 import { ProductService } from 'src/app/core/services/product.service';
 import { SaleService } from 'src/app/core/services/sale.service';
+import { SaleConfirmationDialogComponent } from '../sale-confirmation-dialog/sale-confirmation-dialog.component';
 
 @Component({
   selector: 'app-cart-detail',
@@ -14,11 +17,11 @@ import { SaleService } from 'src/app/core/services/sale.service';
   styleUrls: ['./cart-detail.component.css'],
 })
 export class CartDetailComponent implements OnInit {
-
+  @Output() finishTrx = new EventEmitter();
   expandedElement!: CartItem | null;
   // El observable del carrito que contiene tanto los ítems como los totales
   cartSummary$: Observable<CartSummary> = this.cartService.cart$;
-  
+
   // Columnas a mostrar en la tabla (debe coincidir con la actualización HTML)
   // displayedColumns: string[] = ['name', 'quantity', 'price', 'itemDiscount', 'subtotal', 'actions'];
   displayedColumns: string[] = ['name', 'price', 'subtotal'];
@@ -29,9 +32,12 @@ export class CartDetailComponent implements OnInit {
   // Estado de carga para el botón
   isProcessing = false;
 
-  constructor(private cartService: CartService,
+  constructor(
+    private cartService: CartService,
     private saleService: SaleService, // 👈 Inyectar
     private authService: AuthService, // 👈 Inyectar
+    private printService: PrintService,
+    private dialog: MatDialog,
     private productService: ProductService
   ) {}
 
@@ -63,7 +69,7 @@ export class CartDetailComponent implements OnInit {
 
   applyItemDiscount(productId: number, discount: number): void {
     // Aseguramos la conversión a float para el servicio
-    const value = parseFloat(discount as any) || 0; 
+    const value = parseFloat(discount as any) || 0;
     this.cartService.applyItemDiscount(productId, value);
   }
 
@@ -81,8 +87,7 @@ export class CartDetailComponent implements OnInit {
    */
   checkout(): void {
     // 1. Obtener el estado actual del carrito de forma segura (una sola vez)
-    this.cartSummary$.pipe(take(1)).subscribe(summary => {
-      
+    this.cartSummary$.pipe(take(1)).subscribe((summary) => {
       if (summary.items.length === 0) return;
 
       this.isProcessing = true;
@@ -97,12 +102,12 @@ export class CartDetailComponent implements OnInit {
         envio: summary.shippingCost, // Tu [value-7]
         total_final: summary.finalTotal, // Tu [value-8]
         metodo_pago: this.metodoPago, // La columna que agregamos
-        items: summary.items.map(item => ({
+        items: summary.items.map((item) => ({
           id_producto: item.product.id_producto.toString(),
           cantidad: item.quantity,
           precio: item.product.precio,
-          itemDiscount: item.itemDiscount
-        }))
+          itemDiscount: item.itemDiscount,
+        })),
       };
 
       // 3. Llamar al servicio de ventas
@@ -110,27 +115,51 @@ export class CartDetailComponent implements OnInit {
         next: (response) => {
           this.isProcessing = false;
           if (response.success) {
-            // this.snackBar.open('✅ Venta registrada: ' + this.metodoPago.toUpperCase(), 'Cerrar', { duration: 3000 });
-            this.cartService.clearCart();
-            this.metodoPago = 'efectivo'; // Resetear a default
+            const dialogRef = this.dialog.open(
+              SaleConfirmationDialogComponent,
+              {
+                width: '400px',
+                disableClose: true, // Obligar al usuario a elegir una opción
+                data: { folio: response.id_venta },
+              }
+            );
+
+            dialogRef.afterClosed().subscribe((shouldPrint) => {
+              if (shouldPrint) {
+                // 🖨️ Solo imprimimos si el usuario hizo clic en "Imprimir"
+                this.printService.printTicket(salePayload, response.id_venta);
+              }
+
+              // ✅ En ambos casos, limpiamos el carrito al terminar
+              this.cartService.clearCart();
+              // this.snackBar.open('Venta finalizada', 'OK', { duration: 2000 });
+              // this.snackBar.open('Venta exitosa e imprimiendo...', 'Cerrar', { duration: 3000 });
+              // this.snackBar.open('✅ Venta registrada: ' + this.metodoPago.toUpperCase(), 'Cerrar', { duration: 3000 });
+              // this.cartService.clearCart();
+              this.metodoPago = 'efectivo'; // Resetear a default
+            });
             this.productService.loadGroupedModelos();
+            this.finishedTrax();
           }
         },
         error: (err) => {
           this.isProcessing = false;
           console.error('Error al realizar venta:', err);
-          // this.snackBar.open('❌ Error al procesar la venta. Revisa el inventario.', 'Cerrar', { 
+          // this.snackBar.open('❌ Error al procesar la venta. Revisa el inventario.', 'Cerrar', {
           //   panelClass: ['error-snackbar'],
-          //   duration: 5000 
+          //   duration: 5000
           // });
-        }
+        },
       });
     });
   }
 
   clearCart(): void {
-    const items = this.cartService.getAllItemsSync()
+    const items = this.cartService.getAllItemsSync();
     this.productService.restartModels(items);
     this.cartService.clearCart();
+  }
+  finishedTrax():void{
+    this.finishTrx.emit('hola desde el hijo');
   }
 }
