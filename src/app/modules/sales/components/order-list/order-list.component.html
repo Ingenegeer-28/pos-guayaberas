@@ -1,0 +1,68 @@
+<div class="container">
+    <div class="header">
+        <h1>Gestión de Pedidos (Guayaberas)</h1>
+        <button mat-raised-button color="primary" (click)="fetchOrders()">
+            <mat-icon>refresh</mat-icon> Actualizar
+        </button>
+    </div>
+
+
+    <mat-tab-group animationDuration="500ms">
+
+        <mat-tab label="En Fabricación">
+            <div class="orders-grid">
+                <mat-card *ngFor="let order of ordersInProduction" class="order-card">
+                    <mat-card-header>
+                        <div mat-card-avatar class="status-icon pending"></div>
+                        <mat-card-title>Pedido #{{order.id_pedido}}</mat-card-title>
+                        <mat-card-subtitle>{{order.cliente_nombre}}</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <p><strong>Prendas:</strong> {{order.resumen_items}}</p>
+                        <p><strong>Fecha Entrega:</strong> {{order.fecha_entrega | date}}</p>
+                        <mat-chip-listbox>
+                            <mat-chip [color]="order.estado_fabricacion === 'en_corte' ? 'accent' : 'default'" selected>
+                                {{order.estado_fabricacion | uppercase}}
+                            </mat-chip>
+                        </mat-chip-listbox>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-button color="primary" *ngIf="order.estado_fabricacion === 'pendiente'"
+                            (click)="updateStatus(order.id_pedido, 'en_corte')">INICIAR CORTE</button>
+                        <button mat-raised-button color="accent" (click)="updateStatus(order.id_pedido, 'listo')">MARCAR
+                            COMO LISTO</button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </mat-tab>
+
+        <mat-tab label="Listos para Entrega">
+            <div class="orders-grid">
+                <mat-card *ngFor="let order of ordersReady" class="order-card ready">
+                    <mat-card-header>
+                        <mat-card-title>{{order.cliente_nombre}}</mat-card-title>
+                        <mat-card-subtitle>Folio: #{{order.id_pedido}}</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="payment-info">
+                            <span class="label">Saldo Pendiente:</span>
+                            <span class="amount warn">{{order.saldo_pendiente | currency}}</span>
+                        </div>
+                        <mat-progress-bar mode="determinate"
+                            [value]="(order.total_pagado / order.total_orden) * 100"></mat-progress-bar>
+                    </mat-card-content>
+                    <mat-card-actions>
+                        <button mat-raised-button color="primary" class="full-width" (click)="collectBalance(order)">
+                            <mat-icon>payments</mat-icon> COBRAR Y ENTREGAR
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        </mat-tab>
+
+    </mat-tab-group>
+    <div *ngIf="orders.length == 0 && !loading" class="error-backend">
+        <span>no hay información para mostrar <strong *ngIf="errorBack">error</strong></span>
+    </div>
+    <mat-spinner *ngIf="loading" color="primary"></mat-spinner>
+</div>

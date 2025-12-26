@@ -1,0 +1,46 @@
+.financial-summary {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px dashed #ccc;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.total-val {
+  font-weight: 500;
+}
+.paid-val {
+  color: #2e7d32;
+}
+
+.balance-row {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 1.3rem;
+  color: #c62828;
+}
+
+.payment-form {
+  margin-top: 20px;
+}
+.full-width {
+  width: 100%;
+}
+
+.method-selector {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+mat-radio-button {
+  margin-right: 15px;
+}

@@ -1,0 +1,51 @@
+.container {
+  padding: 20px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.order-card {
+  border-left: 5px solid #ff9800; /* Naranja para pendiente */
+}
+
+.order-card.ready {
+  border-left: 5px solid #4caf50; /* Verde para listo */
+}
+
+.payment-info {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0 5px 0;
+}
+
+.amount.warn {
+  color: #f44336;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.full-width {
+  width: 100%;
+}
+.status-icon {
+  background-size: cover;
+  border-radius: 50%;
+}
+.status-icon.pending {
+  background-color: #ffe0b2;
+}
+.error-backend{
+  background-color: blanchedalmond; 
+  padding: 10px; color: brown;
+  font-size: 16px;
+}

@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>Configurar Nuevo Pedido</h2>
+
+<mat-dialog-content>
+    <div class="section-container">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Buscar Cliente (Nombre o Teléfono)</mat-label>
+            <input type="text" placeholder="Escriba para buscar..." matInput [formControl]="customerControl"
+                [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                (optionSelected)="onCustomerSelected($event)">
+                <mat-option *ngIf="isLoading" class="is-loading">
+                    <mat-spinner diameter="20"></mat-spinner>
+                </mat-option>
+                <mat-option *ngFor="let cliente of filteredCustomers" [value]="cliente">
+                    <span>{{cliente.nombre}}</span> | <small>{{cliente.telefono}}</small>
+                </mat-option>
+            </mat-autocomplete>
+            <button mat-icon-button matSuffix (click)="openNewCustomerModal()" matTooltip="Nuevo Cliente" type="button">
+                <mat-icon>person_add</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+
+    <div class="order-summary-box">
+        <p><strong>Productos a confeccionar:</strong></p>
+        <mat-list dense>
+            <mat-list-item *ngFor="let item of data.items">
+                <mat-icon matListItemIcon>check_circle_outline</mat-icon>
+                <div matListItemTitle>{{item.product.nombre}}</div>
+                <div matListItemLine>{{item.quantity}} unidad(es) - {{item.itemNetTotal | currency}}</div>
+            </mat-list-item>
+        </mat-list>
+        <mat-divider></mat-divider>
+        <div class="total-display">
+            <span>IVA (16%):</span>
+            <span class="value">({{ data.tax | currency }})</span>
+        </div>
+        <div class="total-display" *ngIf="data.shippingCost > 0">
+            <span>Costo de Envío:</span>
+            <span class="value">({{ data.shippingCost | currency }})</span>
+        </div>
+        <div class="total-display">
+            <span>Total del Pedido:</span>
+            <strong>{{data.finalTotal | currency}}</strong>
+        </div>
+    </div>
+
+    <div class="payment-setup-grid">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Fecha Prometida de Entrega</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="fechaEntrega">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Monto de Abono / Anticipo</mat-label>
+            <input matInput type="number" [(ngModel)]="montoAbono" placeholder="0.00">
+            <span matPrefix>$&nbsp;</span>
+        </mat-form-field>
+
+        <div class="payment-method">
+            <mat-label>Método de Abono:</mat-label>
+            <mat-radio-group [(ngModel)]="metodoPago">
+                <mat-radio-button value="efectivo">Efectivo</mat-radio-button>
+                <mat-radio-button value="tarjeta">Tarjeta</mat-radio-button>
+                <mat-radio-button value="transferencia">Transf.</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>CANCELAR</button>
+    <button mat-raised-button color="primary" (click)="crearPedido()" [disabled]="!selectedCustomer || !fechaEntrega">
+        <mat-icon>save</mat-icon> CONFIRMAR PEDIDO
+    </button>
+</mat-dialog-actions>

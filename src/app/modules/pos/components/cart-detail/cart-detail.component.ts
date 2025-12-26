@@ -10,6 +10,8 @@ import { PrintService } from 'src/app/core/services/print.service';
 import { ProductService } from 'src/app/core/services/product.service';
 import { SaleService } from 'src/app/core/services/sale.service';
 import { SaleConfirmationDialogComponent } from '../sale-confirmation-dialog/sale-confirmation-dialog.component';
+import { OrderDialogComponent } from 'src/app/modules/sales/components/order-dialog/order-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-cart-detail',
@@ -38,7 +40,8 @@ export class CartDetailComponent implements OnInit {
     private authService: AuthService, // 👈 Inyectar
     private printService: PrintService,
     private dialog: MatDialog,
-    private productService: ProductService
+    private productService: ProductService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -134,7 +137,7 @@ export class CartDetailComponent implements OnInit {
               this.cartService.clearCart();
               // this.snackBar.open('Venta finalizada', 'OK', { duration: 2000 });
               // this.snackBar.open('Venta exitosa e imprimiendo...', 'Cerrar', { duration: 3000 });
-              // this.snackBar.open('✅ Venta registrada: ' + this.metodoPago.toUpperCase(), 'Cerrar', { duration: 3000 });
+              this.snackBar.open('✅ Venta registrada: ' + this.metodoPago.toUpperCase(), 'Cerrar', { duration: 3000 });
               // this.cartService.clearCart();
               this.metodoPago = 'efectivo'; // Resetear a default
             });
@@ -145,15 +148,34 @@ export class CartDetailComponent implements OnInit {
         error: (err) => {
           this.isProcessing = false;
           console.error('Error al realizar venta:', err);
-          // this.snackBar.open('❌ Error al procesar la venta. Revisa el inventario.', 'Cerrar', {
-          //   panelClass: ['error-snackbar'],
-          //   duration: 5000
-          // });
+          this.snackBar.open('❌ Error al procesar la venta. Revisa el inventario.', 'Cerrar', {
+            panelClass: ['error-snackbar'],
+            duration: 5000
+          });
         },
       });
     });
   }
+  abrirModalPedido(): void {
+    this.cartSummary$.pipe(take(1)).subscribe((summary) => {
+      if (summary.items.length === 0) return;
 
+      const dialogRef = this.dialog.open(OrderDialogComponent, {
+        width: '600px',
+        disableClose: true,
+        data: summary
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          // Si el pedido se guardó con éxito en el modal, limpiamos el carrito
+          this.cartService.clearCart();
+          this.productService.loadGroupedModelos(); // Refrescar stock visual
+          this.finishedTrax();
+        }
+      });
+    });
+  }
   clearCart(): void {
     const items = this.cartService.getAllItemsSync();
     this.productService.restartModels(items);

@@ -18,6 +18,7 @@
   min-width: 380px; /* Asegura un ancho mínimo para la columna del carrito */
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 /* Responsividad para Móviles o Tabletas pequeñas */

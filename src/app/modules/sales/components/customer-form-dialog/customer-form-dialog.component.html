@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Nuevo Cliente</h2>
+<mat-dialog-content>
+    <div class="form-container" style="display: flex; flex-direction: column; gap: 10px; padding-top: 10px;">
+
+        <mat-form-field appearance="outline">
+            <mat-label>Nombre Completo</mat-label>
+            <input matInput [(ngModel)]="nuevoCliente.nombre" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Teléfono (WhatsApp)</mat-label>
+            <input matInput [(ngModel)]="nuevoCliente.telefono">
+            <mat-icon matSuffix>phone</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Correo Electrónico</mat-label>
+            <input matInput [(ngModel)]="nuevoCliente.email" type="email">
+        </mat-form-field>
+
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close [disabled]="loading">CANCELAR</button>
+    <button mat-raised-button color="primary" (click)="guardar()" [disabled]="!nuevoCliente.nombre || loading">
+        {{ loading ? 'GUARDANDO...' : 'GUARDAR Y SELECCIONAR' }}
+    </button>
+</mat-dialog-actions>

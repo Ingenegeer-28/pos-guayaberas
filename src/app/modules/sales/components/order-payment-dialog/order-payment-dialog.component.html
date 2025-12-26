@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>Confirmar Liquidación de Pedido #{{data.id_pedido}}</h2>
+
+<mat-dialog-content>
+    <div class="financial-summary">
+        <div class="summary-row">
+            <span>Total de la Orden:</span>
+            <span class="total-val">{{data.total_orden | currency}}</span>
+        </div>
+        <div class="summary-row">
+            <span>Abonos Anteriores:</span>
+            <span class="paid-val">- {{data.total_pagado | currency}}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="summary-row balance-row">
+            <span>Saldo Pendiente:</span>
+            <span class="balance-val">{{data.saldo_pendiente | currency}}</span>
+        </div>
+    </div>
+
+    <form class="payment-form">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Monto a Recibir</mat-label>
+            <input matInput type="number" [(ngModel)]="montoAPagar" name="monto" [max]="data.saldo_pendiente" min="1">
+            <span matPrefix>$&nbsp;</span>
+            <mat-hint>No puede exceder el saldo pendiente</mat-hint>
+        </mat-form-field>
+
+        <div class="method-selector">
+            <label>Método de Pago:</label>
+            <mat-radio-group [(ngModel)]="metodoPago" name="metodo">
+                <mat-radio-button value="efectivo">Efectivo</mat-radio-button>
+                <mat-radio-button value="tarjeta">Tarjeta</mat-radio-button>
+                <mat-radio-button value="transferencia">Transferencia</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <ng-container *ngIf="!liquidado">
+        <button mat-button mat-dialog-close [disabled]="loading">CANCELAR</button>
+        <button mat-raised-button color="primary" (click)="confirmarPago()" [disabled]="loading || montoAPagar <= 0">
+            <mat-icon *ngIf="!loading">payments</mat-icon>
+            {{ loading ? 'PROCESANDO...' : 'REGISTRAR PAGO' }}
+        </button>
+    </ng-container>
+
+    <ng-container *ngIf="liquidado">
+        <button mat-button (click)="dialogRef.close(true)">CERRAR SIN IMPRIMIR</button>
+        <button mat-raised-button color="accent" (click)="imprimirTicket()">
+            <mat-icon>print</mat-icon> IMPRIMIR TICKET DE ENTREGA
+        </button>
+    </ng-container>
+</mat-dialog-actions>
