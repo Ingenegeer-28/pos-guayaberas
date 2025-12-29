@@ -5,14 +5,69 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+.widgets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin: 0 5px 10px 5px;
+}
+
+.widget-card mat-card-content {
+  display: flex;
+  align-items: center;
+  padding: 10px !important;
+  cursor: pointer;
+}
+
+.widget-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+.widget-icon mat-icon {
+  color: white;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Colores de los iconos */
+.blue {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.green {
+  background: linear-gradient(135deg, #23d5ab, #23a6d5);
+}
+.purple {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.widget-data .label {
+  color: #757575;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.widget-data .value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
 }
 
 .orders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  padding: 20px 0;
+  padding: 2px 0;
 }
 
 .order-card {
@@ -44,8 +99,78 @@
 .status-icon.pending {
   background-color: #ffe0b2;
 }
-.error-backend{
-  background-color: blanchedalmond; 
-  padding: 10px; color: brown;
+.error-backend {
+  background-color: blanchedalmond;
+  padding: 10px;
+  color: brown;
   font-size: 16px;
+}
+.spinner-custom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.chip-cancelada {
+  background-color: #ffcdd2;
+  color: #c62828;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.estatus-colum {
+  background-color: white;
+  color: #2e7d32;
+}
+.estatus-cancel {
+  color: #c62828;
+}
+.footer-summary-row {
+  background-color: #f5f5f5;
+}
+
+.footer-summary-row td {
+  border-top: 2px solid #3f51b5;
+  font-size: 1rem;
+}
+
+.total-highlight {
+  color: #2e7d32;
+  font-size: 1.1rem;
+}
+
+.mat-footer-row {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}
+.mat-content-table {
+  padding: 0;
+}
+.full-width-table {
+  width: 100%;
+}
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* Habilita el scroll horizontal */
+  -webkit-overflow-scrolling: touch;
+}
+table {
+  min-width: 600px; /* Fuerza a la tabla a mantener un ancho mínimo para no amontonarse */
+}
+@media (max-width: 600px) {
+  .container {
+    padding: 5px;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+  }
+  .orders-grid {
+    padding: 5px 0;
+  }
+  table {
+    min-width: 350px; /* Fuerza a la tabla a mantener un ancho mínimo para no amontonarse */
+  }
 }

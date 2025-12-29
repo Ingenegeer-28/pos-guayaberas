@@ -47,7 +47,7 @@
     </mat-card>
 </div>
 <mat-card class="history-card">
-    <mat-card-header>
+    <mat-card-header class="mat-header">
         <mat-card-title>Historial de Ventas</mat-card-title>
         <span class="spacer"></span>
         <button mat-flat-button color="accent" [matMenuTriggerFor]="exportMenu"
@@ -90,7 +90,7 @@
             <mat-icon>filter_alt_off</mat-icon>
         </button>
     </div>
-    <mat-card-content>
+    <mat-card-content class="mat-content-table">
         <div class="table-container">
             <table mat-table [dataSource]="dataSource" class="full-width-table">
 
@@ -161,7 +161,7 @@
                 <tr mat-footer-row *matFooterRowDef="displayedColumns" class="footer-summary-row"></tr>
             </table>
         </div>
-        <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
+        <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons
             aria-label="Seleccionar página"></mat-paginator>
     </mat-card-content>
 </mat-card>

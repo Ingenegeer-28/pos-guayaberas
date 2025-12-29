@@ -46,7 +46,7 @@ export class OrderDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<OrderDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any // Recibe { items, total } desde el carrito
   ) {
-    console.log(data);
+
   }
 
   ngOnInit() {
@@ -103,8 +103,8 @@ export class OrderDialogComponent implements OnInit {
     const pedidoPayload = {
       id_cliente: this.selectedCustomer.id_cliente,
       cliente_nombre: this.selectedCustomer.nombre,
-      // id_usuario: this.authService.getCurrentUser()?.id || 2, // ID del vendedor actual
-      id_usuario: 2, // ID del vendedor actual
+      id_usuario: this.authService.getCurrentUser() || 2, // ID del vendedor actual
+      // id_usuario: 2, // ID del vendedor actual
       total_orden: this.data.finalTotal,
       total_pagado: this.montoAbono,
       metodo_pago: this.metodoPago,
@@ -121,7 +121,7 @@ export class OrderDialogComponent implements OnInit {
         itemDiscount: item.itemDiscount || 0,
       })),
     };
-    console.log(pedidoPayload);
+    // console.log(pedidoPayload);
     this.orderService.createOrder(pedidoPayload).subscribe({
       next: (res) => {
         this.isSaving = false;

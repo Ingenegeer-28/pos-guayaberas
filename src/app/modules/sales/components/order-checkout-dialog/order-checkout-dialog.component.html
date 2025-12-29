@@ -1,1 +1,39 @@
-<p>order-checkout-dialog works!</p>
+<h2 mat-dialog-title>Detalle de order #{{data.id_pedido}}</h2>
+<mat-dialog-content>
+    <div class="info-grid">
+        <p><strong>Fecha:</strong> {{data.fecha_creacion | date:'medium'}}</p>
+
+        <p><strong>Método:</strong> <br><ng-container *ngFor="let abono of data.abonos">{{abono.metodo_pago |
+                uppercase}} {{abono.monto | currency}} <br></ng-container> </p>
+        <p><strong>Cliente:</strong> {{data.cliente_nombre}}</p>
+    </div>
+
+    <table class="detail-table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cant.</th>
+                <th>Precio</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of data.items">
+                <td>{{item.nombre}}</td>
+                <td>{{item.cantidad}}</td>
+                <td>{{item.precio_unitario | currency}}</td>
+                <td>{{(item.cantidad * item.precio_unitario) | currency}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="summary-box">
+        <p>Subtotal: {{data.subtotal | currency}}</p>
+        <p>Descuento: -{{data.descuento_global | currency}}</p>
+        <p>Impuestos: {{data.impuestos | currency}}</p>
+        <h3 class="total">Total: {{data.total_orden | currency}}</h3>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>CERRAR</button>
+</mat-dialog-actions>

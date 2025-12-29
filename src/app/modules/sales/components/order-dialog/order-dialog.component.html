@@ -72,7 +72,7 @@
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>CANCELAR</button>
-    <button mat-raised-button color="primary" (click)="crearPedido()" [disabled]="!selectedCustomer || !fechaEntrega">
+    <button mat-raised-button color="primary" (click)="crearPedido()" [disabled]="!selectedCustomer || !fechaEntrega || montoAbono > data.finalTotal">
         <mat-icon>save</mat-icon> CONFIRMAR PEDIDO
     </button>
 </mat-dialog-actions>

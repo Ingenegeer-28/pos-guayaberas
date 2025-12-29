@@ -98,7 +98,7 @@ export class CartDetailComponent implements OnInit {
       // 2. Preparar el Payload para la API
       // Nota: Aquí podrías abrir un diálogo previo para elegir el método de pago
       const salePayload: SaleRequest = {
-        id_usuario: 2, // Obtener del AuthService this.authService.getCurrentUser()?.id || 1
+        id_usuario: Number(this.authService.getCurrentUser()) || 2, // Obtener del AuthService this.authService.getCurrentUser()?.id || 1
         subtotal: summary.netSubtotal, // Tu [value-4]
         descuento_global: summary.totalDiscount, // Tu [value-5]
         impuestos: summary.tax, // Tu [value-6]

@@ -5,9 +5,45 @@
             <mat-icon>refresh</mat-icon> Actualizar
         </button>
     </div>
+    <div class="widgets-grid">
+        <mat-card class="widget-card" (click)="selectedTab(2)">
+            <mat-card-content>
+                <div class="widget-icon blue">
+                    <mat-icon>analytics</mat-icon>
+                </div>
+                <div class="widget-data">
+                    <div class="label">Entregados</div>
+                    <div class="value">{{ ordersDelivery.length }}</div>
+                </div>
+            </mat-card-content>
+        </mat-card>
 
+        <mat-card class="widget-card" (click)="selectedTab(1)">
+            <mat-card-content>
+                <div class="widget-icon green">
+                    <mat-icon>trending_up</mat-icon>
+                </div>
+                <div class="widget-data">
+                    <div class="label">listos para entrega</div>
+                    <div class="value">{{ ordersReady.length }}</div>
+                </div>
+            </mat-card-content>
+        </mat-card>
 
-    <mat-tab-group animationDuration="500ms">
+        <mat-card class="widget-card" (click)="selectedTab(0)">
+            <mat-card-content>
+                <div class="widget-icon purple">
+                    <mat-icon>shopping_bag</mat-icon>
+                </div>
+                <div class="widget-data">
+                    <div class="label">en producción</div>
+                    <div class="value">{{ ordersInProduction.length }}</div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <mat-tab-group animationDuration="500ms" [selectedIndex]="selectedTabIndex" (selectedIndexChange)="selectedTab($event)">
 
         <mat-tab label="En Fabricación">
             <div class="orders-grid">
@@ -24,6 +60,9 @@
                             <mat-chip [color]="order.estado_fabricacion === 'en_corte' ? 'accent' : 'default'" selected>
                                 {{order.estado_fabricacion | uppercase}}
                             </mat-chip>
+                            <button mat-button style="background-color: red; color: aliceblue; margin-left: 10px;"
+                                *ngIf="order.estado_fabricacion === 'pendiente'"
+                                (click)="cancelOrder(order.id_pedido, 'cancelada')">CANCELAR</button>
                         </mat-chip-listbox>
                     </mat-card-content>
                     <mat-card-actions>
@@ -33,6 +72,9 @@
                             COMO LISTO</button>
                     </mat-card-actions>
                 </mat-card>
+            </div>
+            <div *ngIf="ordersInProduction.length == 0 && !loading && !errorBack" class="error-backend">
+                <span>No hay órdenes en fabricación para mostrar</span>
             </div>
         </mat-tab>
 
@@ -53,16 +95,86 @@
                     </mat-card-content>
                     <mat-card-actions>
                         <button mat-raised-button color="primary" class="full-width" (click)="collectBalance(order)">
-                            <mat-icon>payments</mat-icon> COBRAR Y ENTREGAR
+                            <mat-icon>payments</mat-icon> <span *ngIf="order.saldo_pendiente > 0">COBRAR Y</span>  ENTREGAR
                         </button>
                     </mat-card-actions>
                 </mat-card>
             </div>
+            <div *ngIf="ordersReady.length == 0 && !loading && !errorBack" class="error-backend">
+                <span>No hay órdenes listos para entrega, para mostrar</span>
+            </div>
         </mat-tab>
+        <mat-tab label="Entregados">
+            <mat-card-content class="mat-content-table">
+                <div class="table-container">
+                    <table mat-table [dataSource]="dataSource" class="full-width-table">
 
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef> Folio </th>
+                            <td mat-cell *matCellDef="let order"> #{{order.id_pedido}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="fecha">
+                            <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                            <td mat-cell *matCellDef="let order"> {{order.fecha_creacion | date:'short'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cliente">
+                            <th mat-header-cell *matHeaderCellDef> Cliente </th>
+                            <td mat-cell *matCellDef="let order"> {{order.cliente_nombre}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="total">
+                            <th mat-header-cell *matHeaderCellDef> Total </th>
+                            <td mat-cell *matCellDef="let order"> {{order.total_orden | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef>
+                                <!-- <strong class="total-highlight">{{ getTotalVendido() | currency }}</strong> -->
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="estatus">
+                            <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                            <td mat-cell *matCellDef="let order" style="text-align: center;">
+                                <mat-icon
+                                    [matTooltip]="order.estado_fabricacion === 'cancelada' ? 'cancelada' : 'completada'"
+                                    [class.estatus-cancel]="order.estado_fabricacion === 'cancelada'"
+                                    class="estatus-colum">check_circle</mat-icon>
+                                <!-- <span [class.chip-cancelada]="order.estado_fabricacion === 'cancelada'">
+                            {{order.estatus_venta}}
+                        </span> -->
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                            <td mat-cell *matCellDef="let order">
+                                <button mat-icon-button color="accent" (click)="viewDetail(order)"
+                                    matTooltip="Ver detalle">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                                <button mat-icon-button color="primary" (click)="reprintTicket(order)" *ngIf="order.estado_fabricacion !== 'cancelada' "
+                                    matTooltip="Reimprimir">
+                                    <mat-icon>print</mat-icon>
+                                </button>
+                                <!-- <button mat-icon-button color="warn" (click)="cancelOrder(order.id_pedido, 'cancelada')"
+                                    *ngIf="order.estado_fabricacion !== 'cancelada'" matTooltip="Cancelar">
+                                    <mat-icon>block</mat-icon>
+                                </button> -->
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" showFirstLastButtons
+                    aria-label="Seleccionar página"></mat-paginator>
+            </mat-card-content>
+        </mat-tab>
     </mat-tab-group>
+    <div class="spinner-custom">
+        <mat-spinner *ngIf="loading" color="primary" diameter="50"></mat-spinner>
+    </div>
     <div *ngIf="orders.length == 0 && !loading" class="error-backend">
         <span>no hay información para mostrar <strong *ngIf="errorBack">error</strong></span>
     </div>
-    <mat-spinner *ngIf="loading" color="primary"></mat-spinner>
 </div>

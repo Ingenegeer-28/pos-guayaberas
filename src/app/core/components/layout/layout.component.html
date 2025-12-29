@@ -1,10 +1,6 @@
 <mat-sidenav-container class="sidenav-container">
 
-  <mat-sidenav 
-    #sidenav 
-    mode="side" 
-    [opened]="openSideNav" 
-    class="app-sidenav">
+  <mat-sidenav #sidenav mode="side" [opened]="openSideNav" class="app-sidenav">
     <div class="logo-area">
       <img src="../../../../assets/GuayaPos-icono.png" alt="POS Guayaberas Logo" class="logo">
       <h3 class="app-name">POS Guayaberas</h3>
@@ -15,7 +11,7 @@
         <mat-icon>point_of_sale</mat-icon>
         <span>Punto de Venta</span>
       </a>
-      
+
       <a mat-list-item routerLink="/catalog" routerLinkActive="active-link">
         <mat-icon>inventory_2</mat-icon>
         <span>Catálogo / Inventario</span>
@@ -25,30 +21,33 @@
         <span>Ventas</span>
       </a>
       <a mat-list-item routerLink="/sales/orders" routerLinkActive="active-link">
-        <mat-icon>payments</mat-icon>
-        <span>Órdenes</span>
+        <span class="material-symbols-outlined">draft_orders</span>
+        <span>Pedidos</span>
+      </a>
+      <a mat-list-item routerLink="/users/clientes" routerLinkActive="active-link">
+        <span class="material-symbols-outlined">patient_list</span><span>Clientes</span>
       </a>
       <ng-container *ngIf="(authService.userRole$ | async) === 'admin'">
-        
+
         <!-- <a mat-list-item routerLink="/reports" routerLinkActive="active-link">
           <mat-icon>bar_chart</mat-icon>
           <span>Reportes</span>
         </a> -->
-        
+
         <a mat-list-item routerLink="/users" routerLinkActive="active-link">
           <mat-icon>group</mat-icon> <span>Usuarios</span>
         </a>
-        
+
         <a mat-list-item routerLink="/models" routerLinkActive="active-link">
           <mat-icon>settings</mat-icon>
           <span>Configurar Modelos</span>
         </a>
       </ng-container>
-      
+
     </mat-nav-list>
 
     <mat-divider></mat-divider>
-    
+
     <a mat-list-item (click)="logout()">
       <mat-icon>exit_to_app</mat-icon>
       <span>Salir</span>
@@ -57,7 +56,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    
+
     <mat-toolbar color="primary">
       <button mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle menu">
         <mat-icon>menu</mat-icon>
@@ -68,7 +67,7 @@
 
       <button mat-button>
         <mat-icon>account_circle</mat-icon>
-        {{ userName || 'Cargando...' }} 
+        {{ userName || 'Cargando...' }}
       </button>
     </mat-toolbar>
 

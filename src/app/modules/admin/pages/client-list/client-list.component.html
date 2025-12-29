@@ -1,0 +1,93 @@
+
+<mat-card class="history-card">
+    <mat-card-header>
+        <mat-card-title>Listado de Clientes</mat-card-title>
+        <span class="spacer"></span>
+    </mat-card-header>
+
+    <div class="filter-bar">
+        <mat-form-field appearance="outline">
+            <mat-label>Buscar</mat-label>
+            <input matInput [(ngModel)]="filterCliente" (keyup)="applyFilters()" placeholder="Buscar por nombre, tel o direccion..">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+         <button mat-raised-button color="primary" [matTooltip]="'Agregar Nuevo Cliente'" (click)="openNewCustomerModal()">
+            <mat-icon>person_add</mat-icon><span *ngIf="!isMovil">Agregar</span> 
+        </button>
+        <button mat-icon-button color="warn" (click)="clearFilters()" matTooltip="Limpiar filtros">
+            <mat-icon>filter_alt_off</mat-icon>
+        </button>
+    </div>
+    <div class="spinner-custom">
+        <mat-spinner *ngIf="loading" color="primary" diameter="50"></mat-spinner>
+    </div>
+    
+    <mat-card-content class="mat-content-table" *ngIf="clientsToDisplay.length > 0 && !loading">
+        <div class="table-container">
+            <table mat-table [dataSource]="clientsToDisplay" class="full-width-table">
+
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> Folio </th>
+                    <td mat-cell *matCellDef="let cliente"> #{{cliente.id_cliente}} </td>
+
+                </ng-container>
+                <ng-container matColumnDef="nombre">
+                    <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.nombre}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="telefono">
+                    <th mat-header-cell *matHeaderCellDef> Tel. </th>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.telefono}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="direccion">
+                    <th mat-header-cell *matHeaderCellDef> Dirección </th>
+                    <td mat-cell *matCellDef="let cliente"> {{cliente.direccion}} </td>
+                </ng-container>
+                <ng-container matColumnDef="estatus">
+                    <th mat-header-cell *matHeaderCellDef> Estatus </th>
+                    <td mat-cell *matCellDef="let cliente" style="text-align: center;">
+                        <mat-icon [matTooltip]="!cliente.estatus  ? 'No Activo' : 'Activo'"
+                            [class.estatus-cancel]="!cliente.estatus"
+                            class="estatus-colum">check_circle</mat-icon>
+                        <!-- <span [class.chip-cancelada]="cliente.estatus === 'cancelada'">
+                            {{cliente.estatus}}
+                        </span> -->
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                    <td mat-cell *matCellDef="let cliente">
+                        <button mat-icon-button color="accent" matTooltip="Editar" (click)="openNewCustomerModal(cliente)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="deleteUser(cliente)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <!-- <button mat-icon-button color="accent" (click)="viewDetail(sale)" matTooltip="Ver detalle">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" (click)="reprintTicket(sale)" matTooltip="Reimprimir">
+                            <mat-icon>print</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="cancelSale(sale.id_venta)"
+                            *ngIf="sale.estatus_venta !== 'cancelada'" matTooltip="Cancelar">
+                            <mat-icon>block</mat-icon>
+                        </button> -->
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
+            aria-label="Seleccionar página"></mat-paginator>
+    </mat-card-content>
+    <div *ngIf="clientsToDisplay.length == 0 && !loading" class="error-backend">
+        <span *ngIf="errorBack">no hay información para mostrar <strong >error de conexión</strong></span>
+        <span *ngIf="filterCliente">No hay valores que concidan con: <strong >{{filterCliente}}</strong></span>
+    </div>
+</mat-card>

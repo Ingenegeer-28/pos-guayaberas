@@ -25,7 +25,7 @@ export class OrderPaymentDialogComponent {
   ) {
     // Por defecto, sugerimos liquidar el saldo pendiente total
     this.montoAPagar = this.data.saldo_pendiente;
-    console.log(data);
+    // console.log(data);
   }
 
   confirmarPago() {
@@ -60,7 +60,7 @@ export class OrderPaymentDialogComponent {
   imprimirTicket() {
     this.orderService.getOrderById(this.data.id_pedido).subscribe({
       next:( res)=>{
-        console.log(res);
+        // console.log(res);
         this.printService.printLiquidationTicket(res.data);
       },
       error:(err) =>{

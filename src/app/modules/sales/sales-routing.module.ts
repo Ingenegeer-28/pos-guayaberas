@@ -6,12 +6,13 @@ import { OrderListComponent } from './components/order-list/order-list.component
 const routes: Routes = [
   { 
     path: '', 
-    component: SalesHistoryComponent 
+    component: SalesHistoryComponent,
+    data: { title: 'Ventas' } 
   },
   { 
     path: 'orders', 
     component: OrderListComponent,
-    data: { title: 'Ordenes' } // Ruta para ver métricas de stock
+    data: { title: 'Pedidos' } // Ruta para ver métricas de stock
   }
 ];
 

@@ -1,0 +1,33 @@
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 5px;
+}
+.metodos-pago {
+  text-align: right;
+}
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+}
+.detail-table th {
+  text-align: left;
+  border-bottom: 2px solid #eee;
+  padding: 8px;
+}
+.detail-table td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+.summary-box {
+  text-align: right;
+  margin-top: 20px;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+}
+.total {
+  color: #2e7d32;
+  margin: 0;
+}
