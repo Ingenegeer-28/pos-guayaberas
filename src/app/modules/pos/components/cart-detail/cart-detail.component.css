@@ -76,7 +76,7 @@
 }
 
 .payment-method-section {
-    margin-top: 15px;
+    margin-top: 5px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -192,7 +192,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 /* Estilo específico para el botón de pedido para que resalte */
 .order-button {
-    border: 2px solid #ff4081; /* Color accent de material */
+    /* border: 2px solid #ff4081; Color accent de material */
     font-weight: 500;
 }
 

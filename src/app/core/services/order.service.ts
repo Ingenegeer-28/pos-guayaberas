@@ -1,35 +1,46 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-// import { environment } from 'src/environments/environment';
+import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Pedido, Root } from '../models/order.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrderService {
   // Apunta a la carpeta donde está tu nuevo index.php
   // private readonly API_URL = `${environment.apiUrl}/pedidos`;
-   private readonly API_URL = 'http://localhost/api-guaya-pos/orders/index.php'; 
+  private readonly API_URL = environment.url_base + '/orders/index.php';
 
   constructor(private http: HttpClient) {}
 
   /**
    * GET: Obtener lista de pedidos con filtros opcionales
    */
-  getOrders(filters?: any): Observable<any> {
+  getOrders(filters?: any): Observable<Pedido[]> {
     let params = new HttpParams();
     if (filters?.estado) params = params.set('estado', filters.estado);
-    if (filters?.id_cliente) params = params.set('id_cliente', filters.id_cliente);
-    
-    return this.http.get<any>(this.API_URL, { params });
+    if (filters?.id_cliente)
+      params = params.set('id_cliente', filters.id_cliente);
+
+    return this.http.get<Root>(this.API_URL, { params }).pipe(
+      map((resp) => {
+        return resp.data;
+      })
+    );
   }
 
   /**
    * GET: Obtener detalle completo de un pedido por ID
    * Endpoint: /api/pedidos/{id}
    */
-  getOrderById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}/${id}`);
+  getOrderById(id: number): Observable<Pedido> {
+    return this.http.get<any>(`${this.API_URL}/${id}`).pipe(
+      map((response) => {
+        const prodcuto = response.data;
+        return prodcuto as Pedido;
+      })
+    );
   }
 
   /**
@@ -53,9 +64,9 @@ export class OrderService {
    * Enviamos 'monto_abono' en el cuerpo
    */
   addPayment(id: number, amount: number, method: string): Observable<any> {
-    const body = { 
-      monto_abono: amount, 
-      metodo_pago: method 
+    const body = {
+      monto_abono: amount,
+      metodo_pago: method,
     };
     console.log(body);
     return this.http.put<any>(`${this.API_URL}/${id}`, body);

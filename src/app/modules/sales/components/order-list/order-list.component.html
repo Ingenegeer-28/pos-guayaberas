@@ -43,7 +43,8 @@
         </mat-card>
     </div>
 
-    <mat-tab-group animationDuration="500ms" [selectedIndex]="selectedTabIndex" (selectedIndexChange)="selectedTab($event)">
+    <mat-tab-group animationDuration="500ms" [selectedIndex]="selectedTabIndex"
+        (selectedIndexChange)="selectedTab($event)">
 
         <mat-tab label="En Fabricación">
             <div class="orders-grid">
@@ -55,7 +56,7 @@
                     </mat-card-header>
                     <mat-card-content>
                         <p><strong>Prendas:</strong> {{order.resumen_items}}</p>
-                        <p><strong>Fecha Entrega:</strong> {{order.fecha_entrega | date}}</p>
+                        <p><strong>Fecha Entrega:</strong> {{order.fecha_entrega_estimada | date}}</p>
                         <mat-chip-listbox>
                             <mat-chip [color]="order.estado_fabricacion === 'en_corte' ? 'accent' : 'default'" selected>
                                 {{order.estado_fabricacion | uppercase}}
@@ -86,16 +87,29 @@
                         <mat-card-subtitle>Folio: #{{order.id_pedido}}</mat-card-subtitle>
                     </mat-card-header>
                     <mat-card-content>
-                        <div class="payment-info">
-                            <span class="label">Saldo Pendiente:</span>
-                            <span class="amount warn">{{order.saldo_pendiente | currency}}</span>
-                        </div>
-                        <mat-progress-bar mode="determinate"
-                            [value]="(order.total_pagado / order.total_orden) * 100"></mat-progress-bar>
+                        <ng-container *ngIf="order.saldo_pendiente > 0">
+                            <div class="payment-info">
+                                <span class="label">Saldo Pendiente:</span>
+                                <span class="amount warn">{{order.saldo_pendiente | currency}}</span>
+                            </div>
+                            <mat-progress-bar mode="determinate"
+                                [value]="(order.total_pagado / order.total_orden) * 100"></mat-progress-bar>
+                        </ng-container>
+                        <ng-container *ngIf="order.saldo_pendiente <= 0">
+                            <div class="payment-info">
+                                <span class="label">Saldo Pendiente:</span>
+                                <span class="amount success">{{order.total_pagado | currency}}</span>
+                            </div>
+                        </ng-container>
                     </mat-card-content>
                     <mat-card-actions>
-                        <button mat-raised-button color="primary" class="full-width" (click)="collectBalance(order)">
-                            <mat-icon>payments</mat-icon> <span *ngIf="order.saldo_pendiente > 0">COBRAR Y</span>  ENTREGAR
+                        <button mat-raised-button class="btn-whatsapp" matTooltip="Enviar aviso por WhatsApp"
+                            (click)="notificarWapp(order)">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button mat-raised-button color="primary" (click)="collectBalance(order)">
+                            <mat-icon>payments</mat-icon> <span *ngIf="order.saldo_pendiente > 0">COBRAR Y</span>
+                            ENTREGAR
                         </button>
                     </mat-card-actions>
                 </mat-card>
@@ -151,8 +165,8 @@
                                     matTooltip="Ver detalle">
                                     <mat-icon>visibility</mat-icon>
                                 </button>
-                                <button mat-icon-button color="primary" (click)="reprintTicket(order)" *ngIf="order.estado_fabricacion !== 'cancelada' "
-                                    matTooltip="Reimprimir">
+                                <button mat-icon-button color="primary" (click)="reprintTicket(order)"
+                                    *ngIf="order.estado_fabricacion !== 'cancelada' " matTooltip="Reimprimir">
                                     <mat-icon>print</mat-icon>
                                 </button>
                                 <!-- <button mat-icon-button color="warn" (click)="cancelOrder(order.id_pedido, 'cancelada')"

@@ -61,7 +61,7 @@ export class OrderPaymentDialogComponent {
     this.orderService.getOrderById(this.data.id_pedido).subscribe({
       next:( res)=>{
         // console.log(res);
-        this.printService.printLiquidationTicket(res.data);
+        this.printService.printLiquidationTicket(res);
       },
       error:(err) =>{
         console.log(err);

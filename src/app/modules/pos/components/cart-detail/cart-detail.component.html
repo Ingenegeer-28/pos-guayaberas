@@ -208,25 +208,30 @@
                 <span>Subtotal Bruto:</span>
                 <span class="value">{{ totals.rawSubtotal | currency }}</span>
             </div>
+            <mat-expansion-panel [expanded]="false" class="mb-4">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>Desc y Envío</mat-panel-title>
+                </mat-expansion-panel-header>
+                <ng-container>
+                    <div class="total-row total-input-row">
+                        <span>Desc. Global:</span>
+                        <mat-form-field appearance="outline" class="total-input-field">
+                            <input matInput type="number" min="0" placeholder="0.00" [ngModel]="totals.totalDiscount"
+                                (ngModelChange)="applyTotalDiscount($event)">
+                        </mat-form-field>
+                        <span class="value">({{ totals.totalDiscount | currency }})</span>
+                    </div>
 
-            <div class="total-row total-input-row">
-                <span>Desc. Global:</span>
-                <mat-form-field appearance="outline" class="total-input-field">
-                    <input matInput type="number" min="0" placeholder="0.00" [ngModel]="totals.totalDiscount"
-                        (ngModelChange)="applyTotalDiscount($event)">
-                </mat-form-field>
-                <span class="value">({{ totals.totalDiscount | currency }})</span>
-            </div>
-
-            <div class="total-row total-input-row">
-                <span>Costo de Envío:</span>
-                <mat-form-field appearance="outline" class="total-input-field">
-                    <input matInput type="number" min="0" placeholder="0.00" [ngModel]="totals.shippingCost"
-                        (ngModelChange)="setShippingCost($event)">
-                </mat-form-field>
-                <span class="value">({{ totals.shippingCost | currency }})</span>
-            </div>
-
+                    <div class="total-row total-input-row">
+                        <span>Costo de Envío:</span>
+                        <mat-form-field appearance="outline" class="total-input-field">
+                            <input matInput type="number" min="0" placeholder="0.00" [ngModel]="totals.shippingCost"
+                                (ngModelChange)="setShippingCost($event)">
+                        </mat-form-field>
+                        <span class="value">({{ totals.shippingCost | currency }})</span>
+                    </div>
+                </ng-container>
+            </mat-expansion-panel>
             <mat-divider></mat-divider>
 
             <div class="total-row">
@@ -264,7 +269,7 @@
                     <span>{{ isProcessing ? 'Procesando...' : 'Finalizar Venta' }}</span>
                 </button>
 
-                <button mat-stroked-button color="accent" class="order-button"
+                <button mat-raised-button color="accent" class="order-button"
                     [disabled]="totals.items.length === 0 || isProcessing" (click)="abrirModalPedido()">
                     <mat-icon>assignment</mat-icon>
                     <span>Crear Pedido</span>

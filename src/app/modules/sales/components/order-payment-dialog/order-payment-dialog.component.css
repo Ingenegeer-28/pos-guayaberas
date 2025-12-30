@@ -44,3 +44,29 @@
 mat-radio-button {
   margin-right: 15px;
 }
+.pedido-listo{
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px dashed #ccc;
+}
+.pedido-listo .head {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #2e7d32;
+  text-align: center;
+}
+
+.check-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+}
+
+.check-success i{
+  color: #2e7d32;
+  font-size: 7.5em;
+}

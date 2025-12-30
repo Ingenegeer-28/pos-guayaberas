@@ -69,7 +69,6 @@ export class SalesHistoryComponent implements OnInit {
     };
 
     this.saleService.getSales(filters).subscribe(res => {
-      console.log(res);
       if (res.success){ 
         this.sales = res.data;
         this.dataSource.data = res.data;

@@ -89,8 +89,23 @@
   font-weight: bold;
   font-size: 1.2rem;
 }
+.amount.success {
+  color: #2e7d32;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
 .full-width {
   width: 100%;
+}
+.btn-whatsapp{
+  font-size: 22px;
+  margin-right: 5px;
+  border-radius: 5;
+  border: 1px #2e7d32 solid;
+  cursor: pointer;
+}
+.btn-whatsapp i{
+  color: #2e7d32;
 }
 .status-icon {
   background-size: cover;

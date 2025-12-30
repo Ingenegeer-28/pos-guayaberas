@@ -8,6 +8,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { PrintService } from 'src/app/core/services/print.service';
 import { OrderCheckoutDialogComponent } from '../order-checkout-dialog/order-checkout-dialog.component';
+import { NotificationService } from 'src/app/core/services/notification.service';
+import { Pedido } from 'src/app/core/models/order.model';
 
 @Component({
   selector: 'app-order-list',
@@ -15,7 +17,7 @@ import { OrderCheckoutDialogComponent } from '../order-checkout-dialog/order-che
   styleUrls: ['./order-list.component.css']
 })
 export class OrderListComponent implements OnInit {
-  orders: any[] = [];
+  orders: Pedido[] = [];
   loading = false;
   errorBack: boolean = false;
   selectedTabIndex: number = 2;
@@ -31,6 +33,7 @@ export class OrderListComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     private orderService: OrderService,
     private printService: PrintService,
+    private notificationService: NotificationService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
@@ -50,9 +53,9 @@ export class OrderListComponent implements OnInit {
     this.loading = true;
     this.orderService.getOrders().subscribe({
       next: (res) => {
-        this.orders = res.data;
+        this.orders = res;
         this.loading = false;
-        this.dataSource.data = res.data;
+        this.dataSource.data = res;
         this.dataSource.paginator = this.paginator;
       },
       error: (err) => {
@@ -85,7 +88,7 @@ export class OrderListComponent implements OnInit {
   reprintTicket(order : any) {
     this.orderService.getOrderById(order.id_pedido).subscribe({
       next:( res)=>{
-        this.printService.printLiquidationTicket(res.data);
+        this.printService.printLiquidationTicket(res);
       },
       error:(err) =>{
         console.log(err);
@@ -97,7 +100,7 @@ export class OrderListComponent implements OnInit {
       this.orderService.getOrderById(order.id_pedido).subscribe(res => {
         this.dialog.open(OrderCheckoutDialogComponent, {
           width: '600px',
-          data: res.data
+          data: res
         });
       });
     }
@@ -109,6 +112,9 @@ export class OrderListComponent implements OnInit {
   }
   selectedTab(tab: number){
     this.selectedTabIndex = tab;
+  }
+  notificarWapp(pedido: any){
+    this.notificationService.sendOrderReadyMessage(pedido);
   }
   collectBalance(order: any) {
     if(order.saldo_pendiente <= 0){
