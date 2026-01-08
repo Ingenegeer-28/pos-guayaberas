@@ -56,7 +56,7 @@ const routes: Routes = [
   // { path: 'reports', loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule) },
   // 3. Redirecciones
   // Redirigir la raíz ('/') a la ruta principal del POS, pero la protegeremos
-  { path: '', redirectTo: 'pos', pathMatch: 'full' },
+  {path: '**', redirectTo: 'pos', pathMatch: 'full'},
 ];
 
 @NgModule({
